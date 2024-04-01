@@ -19,3 +19,4 @@ export type CardPlacement =
     }
   | { stack: 'foundation'; index: number }
   | { stack: 'waste' }
+  | { stack: 'stock' }

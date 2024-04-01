@@ -87,7 +87,6 @@ const useGameStore = create<GameState>((set) => ({
   },
   moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => {
     set((state: GameState) => {
-      console.log('MOVE', card, from, to)
       // TODO fix targets
       const { foundation, waste, stock, tableau } = state
       let movingCards: Card[] = []

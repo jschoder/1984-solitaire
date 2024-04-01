@@ -53,12 +53,16 @@ import SpadesAceSvg from '~/assets/cards/spades_ace.svg?react'
 import SpadesJackSvg from '~/assets/cards/spades_jack.svg?react'
 import SpadesKingSvg from '~/assets/cards/spades_king.svg?react'
 import SpadesQueenSvg from '~/assets/cards/spades_queen.svg?react'
+import CardBackSvg from '~/assets/cards/back.svg?react'
 
 type CardImageProps = {
-  card: Card
+  card?: Card
 }
 
 const CardImage = ({ card }: CardImageProps) => {
+  if (!card) {
+    return <CardBackSvg />
+  }
   switch (card.face) {
     case 'club':
       switch (card.value) {

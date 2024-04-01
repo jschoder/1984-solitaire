@@ -1,18 +1,7 @@
-import React from 'react'
 import type { Card, CardPlacement } from '~/types/card'
 import CardImage from '~/components/CardImage'
-import CardBackSvg from '~/assets/cards/back.svg?react'
-import useStore, { GameState } from '../../ model/Game'
 
-import { useDrag } from 'react-dnd'
-
-/*
-const cardSource = {
-  beginDrag: (props: any, monitor: DragSourceMonitor) => ({
-    card: props.card,
-  }),
-}
-*/
+import { useDraggable } from '@dnd-kit/core'
 
 type PlayingCardProps = {
   card: Card
@@ -25,33 +14,31 @@ const PlayingCard = ({
   placement,
   topOnly = false,
 }: PlayingCardProps) => {
-  const moveCard = useStore((state: GameState) => state.moveCard)
-
-  const [, drag] = useDrag(() => ({
-    type: 'CARD',
-    item: card,
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult<CardPlacement>()
-      if (item && placement && dropResult) {
-        // console.log('DROPPED', card, dropResult)
-        moveCard(item, placement, dropResult)
-      }
+  const {
+    attributes,
+    listeners,
+    setNodeRef: cardDragRef,
+  } = useDraggable({
+    id: card.face + '-' + card.value,
+    data: {
+      card,
+      placement,
     },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-      handlerId: monitor.getHandlerId(),
-    }),
-  }))
+  })
 
   return (
-    <div
-      ref={drag}
-      className={`${topOnly ? 'overflow-hidden aspect-[4/1] -mb-2' : ''}`}
-    >
-      <div className="rounded-lg overflow-hidden border border-gray-800">
-        {card.faceUp ? <CardImage card={card} /> : <CardBackSvg />}
+    <>
+      <div
+        ref={card.faceUp ? cardDragRef : undefined}
+        className={`${topOnly ? 'overflow-hidden aspect-[4/1] -mb-2' : ''}`}
+        {...listeners}
+        {...attributes}
+      >
+        <div className="rounded-lg overflow-hidden border border-gray-800">
+          {card.faceUp ? <CardImage card={card} /> : <CardImage />}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

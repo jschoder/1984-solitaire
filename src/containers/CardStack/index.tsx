@@ -1,12 +1,12 @@
 import React from 'react'
 import { Card, CardPlacement } from '../../types/card'
-import { useDrop } from 'react-dnd'
+import { useDroppable } from '@dnd-kit/core'
 
 import PlayingCard from '../../components/PlayingCard'
 
 type CardStackProps = {
   cards: Card[]
-  placement?: CardPlacement
+  placement: CardPlacement
   flatStack?: boolean
   onClick?: () => void
 }
@@ -17,15 +17,12 @@ const CardStack = ({
   flatStack = false,
   onClick,
 }: CardStackProps) => {
-  // TODO cleanup
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: 'CARD',
-    drop: () => placement,
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  }))
+  const { isOver, setNodeRef: droppableRef } = useDroppable({
+    id: placement.stack + ('index' in placement ? '-' + placement.index : ''),
+    data: {
+      placement,
+    },
+  })
 
   const children =
     cards.length === 0 ? (
@@ -45,7 +42,7 @@ const CardStack = ({
 
   return (
     <div
-      ref={drop}
+      ref={droppableRef}
       className={`flex flex-col ${isOver ? 'opacity-70' : ''}`}
       onClick={onClick}
     >
