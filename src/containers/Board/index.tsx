@@ -1,6 +1,5 @@
 import React from 'react'
-import FlatCardStack from '../FlatCardStack'
-import LayeredCardStack from '../LayeredCardStack'
+import CardStack from '../CardStack'
 import PlayingCard from '../../components/PlayingCard'
 import useStore, { GameState } from '../../ model/Game'
 
@@ -20,25 +19,32 @@ const BoardLayout = () => {
   return (
     <div className="max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-4 p-4">
       {foundationState.map((foundationStack, index) => (
-        <FlatCardStack
+        <CardStack
           key={`foundation-${index}`}
           cards={foundationStack}
-          topCardVisible={true}
-        ></FlatCardStack>
+          placement={{ stack: 'foundation', index }}
+          flatStack
+        />
       ))}
       <div />
-      <FlatCardStack key="waste" cards={wasteState} topCardVisible={true} />
-      <FlatCardStack
+      <CardStack
+        key="waste"
+        cards={wasteState}
+        placement={{ stack: 'waste' }}
+        onClick={wasteState.length === 0 ? cycleStock : undefined}
+        flatStack
+      />
+      <CardStack
         key="stock"
         cards={stockState}
-        topCardVisible={false}
         onClick={cycleStock}
+        flatStack
       />
       {tableauState.map((tableauStack, index) => (
-        <LayeredCardStack
+        <CardStack
           key={`tableau-${index}`}
-          hiddenCards={tableauStack.hidden}
-          visibleCards={tableauStack.visible}
+          cards={tableauStack}
+          placement={{ stack: 'tableau', index }}
         />
       ))}
     </div>

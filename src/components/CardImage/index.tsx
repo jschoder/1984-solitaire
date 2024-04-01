@@ -58,7 +58,7 @@ type CardImageProps = {
   card: Card
 }
 
-const PlayingCard = ({ card }: CardImageProps) => {
+const CardImage = ({ card }: CardImageProps) => {
   switch (card.face) {
     case 'club':
       switch (card.value) {
@@ -189,4 +189,4 @@ const PlayingCard = ({ card }: CardImageProps) => {
   }
 }
 
-export default PlayingCard
+export default CardImage
