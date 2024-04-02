@@ -5,3 +5,5 @@ This software isn't intended for serious use. I am playing around with different
 **DON'T TRY THIS AT WORK**
 
 I also don't claim any copyright over the assets or code.
+
+Used image for card distressing effect https://www.vecteezy.com/vector-art/142219-film-grain-background-texture

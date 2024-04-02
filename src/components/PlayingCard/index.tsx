@@ -34,9 +34,7 @@ const PlayingCard = ({
         {...listeners}
         {...attributes}
       >
-        <div className="rounded-lg overflow-hidden border border-gray-800">
-          {card.faceUp ? <CardImage card={card} /> : <CardImage />}
-        </div>
+        {<CardImage card={card} />}
       </div>
     </>
   )

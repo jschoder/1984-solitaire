@@ -1,8 +1,15 @@
 import { ReactNode } from 'react'
 import type { Card, CardValue } from '~/types/card'
-import CardBackSvg from '~/assets/cards/back.svg?react'
-import suitElements from './suits'
 import characterElements from './characters'
+import logoElement from './logo'
+import suitElements from './suits'
+
+const WHITE = '#f3efe0'
+const RED = '#9f3a36'
+const BLACK = '#373635'
+
+// Size of the distress element
+const DISTRESS_SIZE = 20
 
 // Padding between elements
 const OUTER_PADDING = 20
@@ -50,6 +57,9 @@ const GRID_Y_4 = GRID_Y_3 + 0.5 * (ICON + ICON_GAP_Y)
 const GRID_Y_5 = GRID_Y_3 + ICON + ICON_GAP_Y
 const GRID_Y_6 = GRID_Y_5 + 0.5 * (ICON + ICON_GAP_Y)
 const GRID_Y_7 = GRID_Y_5 + ICON + ICON_GAP_Y
+
+// Margin for the party logo
+const LOGO_MARGIN = 50
 
 const SUIT_ICONS = {
   1: [],
@@ -214,59 +224,105 @@ const getCenterElements = (
   }
 }
 
+const distressCardElement = (color: string, x: number, y: number) => (
+  <g
+    transform={`translate(${Math.round((DISTRESS_SIZE - WIDTH) * x)}, ${Math.round((DISTRESS_SIZE - HEIGHT) * y)})`}
+    style={{ fill: color }}
+  >
+    <use xlinkHref="#distressing" />
+  </g>
+)
+
 type CardImageProps = {
   card?: Card
 }
 
 const CardImage = ({ card }: CardImageProps) => {
   if (!card) {
-    return <CardBackSvg />
+    return (
+      <div className="rounded-lg overflow-hidden border border-white">
+        <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`}></svg>
+      </div>
+    )
   }
 
-  const mainColor =
-    card.suit === 'heart' || card.suit === 'diamond' ? '#9f3a36' : '#373635'
-  const secondaryColor =
-    card.suit === 'heart' || card.suit === 'diamond' ? '#373635' : '#9f3a36'
+  if (card.faceUp) {
+    const mainColor =
+      card.suit === 'heart' || card.suit === 'diamond' ? RED : BLACK
+    const secondaryColor =
+      card.suit === 'heart' || card.suit === 'diamond' ? BLACK : RED
 
-  return (
-    <svg
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      style={{
-        color: mainColor,
-      }}
-    >
-      <rect x="0" y="0" width="630" height="880" fill="#f3efe0" />
-      {rescaleElement(
-        characterElements[card.value],
-        OUTER_PADDING,
-        OUTER_PADDING,
-        SMALL_ICON,
-        false,
-      )}
-      {rescaleElement(
-        suitElements[card.suit],
-        OUTER_PADDING,
-        OUTER_PADDING + SMALL_ICON_GAP + SMALL_ICON,
-        SMALL_ICON,
-        false,
-      )}
-      {getCenterElements(card, mainColor, secondaryColor)}
-      {rescaleElement(
-        suitElements[card.suit],
-        WIDTH - OUTER_PADDING - SMALL_ICON,
-        HEIGHT - OUTER_PADDING - SMALL_ICON - SMALL_ICON_GAP - SMALL_ICON,
-        SMALL_ICON,
-        true,
-      )}
-      {rescaleElement(
-        characterElements[card.value],
-        WIDTH - OUTER_PADDING - SMALL_ICON,
-        HEIGHT - OUTER_PADDING - SMALL_ICON,
-        SMALL_ICON,
-        true,
-      )}
-    </svg>
-  )
+    return (
+      <div className="rounded-lg overflow-hidden border border-gray-800">
+        <svg
+          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+          style={{
+            color: mainColor,
+            backgroundColor: WHITE,
+          }}
+        >
+          {rescaleElement(
+            characterElements[card.value],
+            OUTER_PADDING,
+            OUTER_PADDING,
+            SMALL_ICON,
+            false,
+          )}
+          {rescaleElement(
+            suitElements[card.suit],
+            OUTER_PADDING,
+            OUTER_PADDING + SMALL_ICON_GAP + SMALL_ICON,
+            SMALL_ICON,
+            false,
+          )}
+          {getCenterElements(card, mainColor, secondaryColor)}
+          {rescaleElement(
+            suitElements[card.suit],
+            WIDTH - OUTER_PADDING - SMALL_ICON,
+            HEIGHT - OUTER_PADDING - SMALL_ICON - SMALL_ICON_GAP - SMALL_ICON,
+            SMALL_ICON,
+            true,
+          )}
+          {rescaleElement(
+            characterElements[card.value],
+            WIDTH - OUTER_PADDING - SMALL_ICON,
+            HEIGHT - OUTER_PADDING - SMALL_ICON,
+            SMALL_ICON,
+            true,
+          )}
+          {distressCardElement(
+            WHITE,
+            card.distress.front.x,
+            card.distress.front.y,
+          )}
+        </svg>
+      </div>
+    )
+  } else {
+    return (
+      <div className="rounded-lg overflow-hidden border border-gray-800">
+        <svg
+          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+          style={{
+            backgroundColor: BLACK,
+          }}
+        >
+          {rescaleElement(
+            logoElement,
+            LOGO_MARGIN,
+            HEIGHT / 2 - WIDTH / 2 + LOGO_MARGIN,
+            WIDTH - 2 * LOGO_MARGIN,
+            false,
+          )}
+          {distressCardElement(
+            BLACK,
+            card.distress.back.x,
+            card.distress.back.y,
+          )}
+        </svg>
+      </div>
+    )
+  }
 }
 
 export default CardImage

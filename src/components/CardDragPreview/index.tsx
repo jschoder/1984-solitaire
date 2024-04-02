@@ -1,6 +1,6 @@
 import type { Card, CardPlacement } from '~/types/card'
 import CardImage from '~/components/CardImage'
-import useStore, { GameState } from '../../ model/Game'
+import useStore, { GameState } from '../../model/Game'
 
 type CardDragPreviewProps = {
   card: Card

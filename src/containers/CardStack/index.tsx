@@ -3,6 +3,7 @@ import { Card, CardPlacement } from '../../types/card'
 import { useDroppable } from '@dnd-kit/core'
 
 import PlayingCard from '../../components/PlayingCard'
+import CardImage from '~/components/CardImage'
 
 type CardStackProps = {
   cards: Card[]
@@ -26,7 +27,7 @@ const CardStack = ({
 
   const children =
     cards.length === 0 ? (
-      <div className="border border-white rounded-lg h-full"></div>
+      <CardImage />
     ) : flatStack ? (
       <PlayingCard card={cards[cards.length - 1]} placement={placement} />
     ) : (

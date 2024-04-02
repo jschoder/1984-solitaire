@@ -10,6 +10,16 @@ export type Card = {
   suit: CardSuit
   value: CardValue
   faceUp: boolean
+  distress: {
+    front: {
+      x: number
+      y: number
+    }
+    back: {
+      x: number
+      y: number
+    }
+  }
 }
 
 export type CardPlacement =

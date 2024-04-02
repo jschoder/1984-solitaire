@@ -61,12 +61,26 @@ const useGameStore = create<GameState>((set) => ({
     })
   },
   shufflePile: () => {
-    set((state: GameState) => {
+    set(() => {
       const suits: CardSuit[] = ['diamond', 'heart', 'spade', 'club']
       const values: CardValue[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
       const cards: Card[] = shuffle(
         suits.flatMap((suit) =>
-          values.map((value) => ({ suit, value, faceUp: false })),
+          values.map((value) => ({
+            suit,
+            value,
+            faceUp: false,
+            distress: {
+              front: {
+                x: Math.random(),
+                y: Math.random(),
+              },
+              back: {
+                x: Math.random(),
+                y: Math.random(),
+              },
+            },
+          })),
         ),
       )
       const tableau = []
