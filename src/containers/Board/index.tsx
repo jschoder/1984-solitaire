@@ -4,6 +4,7 @@ import CardDragPreview from '~/components/CardDragPreview'
 import type { Card, CardPlacement } from '~/types/card'
 import useStore, { GameState } from '../../ model/Game'
 import { DndContext, DragOverlay } from '@dnd-kit/core'
+import CardImage from '~/components/CardImage'
 
 const BoardLayout = () => {
   const [activeDrag, setActiveDrag] = React.useState<

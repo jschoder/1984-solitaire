@@ -1,59 +1,218 @@
-import React from 'react'
-import type { Card } from '~/types/card'
-
-import Clubs2Svg from '~/assets/cards/clubs_2.svg?react'
-import Clubs3Svg from '~/assets/cards/clubs_3.svg?react'
-import Clubs4Svg from '~/assets/cards/clubs_4.svg?react'
-import Clubs5Svg from '~/assets/cards/clubs_5.svg?react'
-import Clubs6Svg from '~/assets/cards/clubs_6.svg?react'
-import Clubs7Svg from '~/assets/cards/clubs_7.svg?react'
-import Clubs8Svg from '~/assets/cards/clubs_8.svg?react'
-import Clubs9Svg from '~/assets/cards/clubs_9.svg?react'
-import Clubs10Svg from '~/assets/cards/clubs_10.svg?react'
-import ClubsAceSvg from '~/assets/cards/clubs_ace.svg?react'
-import ClubsJackSvg from '~/assets/cards/clubs_jack.svg?react'
-import ClubsKingSvg from '~/assets/cards/clubs_king.svg?react'
-import ClubsQueenSvg from '~/assets/cards/clubs_queen.svg?react'
-import Diamonds2Svg from '~/assets/cards/diamonds_2.svg?react'
-import Diamonds3Svg from '~/assets/cards/diamonds_3.svg?react'
-import Diamonds4Svg from '~/assets/cards/diamonds_4.svg?react'
-import Diamonds5Svg from '~/assets/cards/diamonds_5.svg?react'
-import Diamonds6Svg from '~/assets/cards/diamonds_6.svg?react'
-import Diamonds7Svg from '~/assets/cards/diamonds_7.svg?react'
-import Diamonds8Svg from '~/assets/cards/diamonds_8.svg?react'
-import Diamonds9Svg from '~/assets/cards/diamonds_9.svg?react'
-import Diamonds10Svg from '~/assets/cards/diamonds_10.svg?react'
-import DiamondsAceSvg from '~/assets/cards/diamonds_ace.svg?react'
-import DiamondsJackSvg from '~/assets/cards/diamonds_jack.svg?react'
-import DiamondsKingSvg from '~/assets/cards/diamonds_king.svg?react'
-import DiamondsQueenSvg from '~/assets/cards/diamonds_queen.svg?react'
-import Hearts2Svg from '~/assets/cards/hearts_2.svg?react'
-import Hearts3Svg from '~/assets/cards/hearts_3.svg?react'
-import Hearts4Svg from '~/assets/cards/hearts_4.svg?react'
-import Hearts5Svg from '~/assets/cards/hearts_5.svg?react'
-import Hearts6Svg from '~/assets/cards/hearts_6.svg?react'
-import Hearts7Svg from '~/assets/cards/hearts_7.svg?react'
-import Hearts8Svg from '~/assets/cards/hearts_8.svg?react'
-import Hearts9Svg from '~/assets/cards/hearts_9.svg?react'
-import Hearts10Svg from '~/assets/cards/hearts_10.svg?react'
-import HeartsAceSvg from '~/assets/cards/hearts_ace.svg?react'
-import HeartsJackSvg from '~/assets/cards/hearts_jack.svg?react'
-import HeartsKingSvg from '~/assets/cards/hearts_king.svg?react'
-import HeartsQueenSvg from '~/assets/cards/hearts_queen.svg?react'
-import Spades2Svg from '~/assets/cards/spades_2.svg?react'
-import Spades3Svg from '~/assets/cards/spades_3.svg?react'
-import Spades4Svg from '~/assets/cards/spades_4.svg?react'
-import Spades5Svg from '~/assets/cards/spades_5.svg?react'
-import Spades6Svg from '~/assets/cards/spades_6.svg?react'
-import Spades7Svg from '~/assets/cards/spades_7.svg?react'
-import Spades8Svg from '~/assets/cards/spades_8.svg?react'
-import Spades9Svg from '~/assets/cards/spades_9.svg?react'
-import Spades10Svg from '~/assets/cards/spades_10.svg?react'
-import SpadesAceSvg from '~/assets/cards/spades_ace.svg?react'
-import SpadesJackSvg from '~/assets/cards/spades_jack.svg?react'
-import SpadesKingSvg from '~/assets/cards/spades_king.svg?react'
-import SpadesQueenSvg from '~/assets/cards/spades_queen.svg?react'
+import { ReactNode } from 'react'
+import type { Card, CardValue } from '~/types/card'
 import CardBackSvg from '~/assets/cards/back.svg?react'
+import suitElements from './suits'
+import characterElements from './characters'
+
+// Padding between elements
+const OUTER_PADDING = 20
+const MAIN_PADDING_X = 20
+
+// Small icon & character top left and and bottom right
+const SMALL_ICON = 40
+const SMALL_ICON_GAP = 10
+
+// Suit Icons and spacing for 2-10
+const ICON = 90
+const ICON_GAP_X = 5
+const ICON_GAP_Y = 40
+
+// Letters to show for J/Q/K (11/12/13)
+const BIG_ICON = 110
+const BIG_ICON_GAP = 20
+const BIG_LINE_STROKE = 10
+
+// Total width and height of the viewport
+const WIDTH =
+  OUTER_PADDING +
+  SMALL_ICON +
+  MAIN_PADDING_X +
+  (ICON + ICON_GAP_X + ICON + ICON_GAP_X + ICON) +
+  MAIN_PADDING_X +
+  SMALL_ICON +
+  OUTER_PADDING
+const HEIGHT = Math.round(WIDTH * (880 / 630))
+
+// Area to show the main part of the card (excluding the corners)
+const MAIN_X = OUTER_PADDING + SMALL_ICON + MAIN_PADDING_X
+const MAIN_Y = (HEIGHT - 4 * ICON - 3 * ICON_GAP_Y) / 2
+
+// Grid for suit icons 2-10
+const GRID_X_1 = MAIN_X
+const GRID_X_2 = MAIN_X + ICON + ICON_GAP_X
+const GRID_X_3 = MAIN_X + ICON + ICON_GAP_X + ICON + ICON_GAP_X
+
+const GRID_Y_1 = MAIN_Y
+const GRID_Y_2 = GRID_Y_1 + 0.5 * (ICON + ICON_GAP_Y)
+const GRID_Y_2_5 = GRID_Y_1 + 0.67 * (ICON + ICON_GAP_Y)
+const GRID_Y_3 = GRID_Y_1 + ICON + ICON_GAP_Y
+const GRID_Y_4 = GRID_Y_3 + 0.5 * (ICON + ICON_GAP_Y)
+const GRID_Y_5 = GRID_Y_3 + ICON + ICON_GAP_Y
+const GRID_Y_6 = GRID_Y_5 + 0.5 * (ICON + ICON_GAP_Y)
+const GRID_Y_7 = GRID_Y_5 + ICON + ICON_GAP_Y
+
+const SUIT_ICONS = {
+  1: [],
+  2: [
+    [GRID_X_2, GRID_Y_2, false],
+    [GRID_X_2, GRID_Y_6, true],
+  ],
+  3: [
+    [GRID_X_2, GRID_Y_1, false],
+    [GRID_X_2, GRID_Y_4, false],
+    [GRID_X_2, GRID_Y_7, true],
+  ],
+  4: [
+    [GRID_X_1, GRID_Y_2, false],
+    [GRID_X_3, GRID_Y_2, false],
+    [GRID_X_1, GRID_Y_6, true],
+    [GRID_X_3, GRID_Y_6, true],
+  ],
+  5: [
+    [GRID_X_1, GRID_Y_1, false],
+    [GRID_X_3, GRID_Y_1, false],
+    [GRID_X_2, GRID_Y_4, false],
+    [GRID_X_1, GRID_Y_7, true],
+    [GRID_X_3, GRID_Y_7, true],
+  ],
+  6: [
+    [GRID_X_1, GRID_Y_1, false],
+    [GRID_X_3, GRID_Y_1, false],
+    [GRID_X_1, GRID_Y_4, false],
+    [GRID_X_3, GRID_Y_4, false],
+    [GRID_X_1, GRID_Y_7, true],
+    [GRID_X_3, GRID_Y_7, true],
+  ],
+  7: [
+    [GRID_X_1, GRID_Y_1, false],
+    [GRID_X_3, GRID_Y_1, false],
+    [GRID_X_2, GRID_Y_2_5, false],
+    [GRID_X_1, GRID_Y_4, false],
+    [GRID_X_3, GRID_Y_4, false],
+    [GRID_X_1, GRID_Y_7, true],
+    [GRID_X_3, GRID_Y_7, true],
+  ],
+  8: [
+    [GRID_X_1, GRID_Y_1, false],
+    [GRID_X_3, GRID_Y_1, false],
+    [GRID_X_1, GRID_Y_3, false],
+    [GRID_X_3, GRID_Y_3, false],
+    [GRID_X_1, GRID_Y_5, true],
+    [GRID_X_3, GRID_Y_5, true],
+    [GRID_X_1, GRID_Y_7, true],
+    [GRID_X_3, GRID_Y_7, true],
+  ],
+  9: [
+    [GRID_X_1, GRID_Y_1, false],
+    [GRID_X_3, GRID_Y_1, false],
+    [GRID_X_1, GRID_Y_3, false],
+    [GRID_X_3, GRID_Y_3, false],
+    [GRID_X_2, GRID_Y_4, false],
+    [GRID_X_1, GRID_Y_5, true],
+    [GRID_X_3, GRID_Y_5, true],
+    [GRID_X_1, GRID_Y_7, true],
+    [GRID_X_3, GRID_Y_7, true],
+  ],
+  10: [
+    [GRID_X_1, GRID_Y_1, false],
+    [GRID_X_3, GRID_Y_1, false],
+    [GRID_X_2, GRID_Y_2, false],
+    [GRID_X_1, GRID_Y_3, false],
+    [GRID_X_3, GRID_Y_3, false],
+    [GRID_X_1, GRID_Y_5, true],
+    [GRID_X_3, GRID_Y_5, true],
+    [GRID_X_2, GRID_Y_6, true],
+    [GRID_X_1, GRID_Y_7, true],
+    [GRID_X_3, GRID_Y_7, true],
+  ],
+  11: [],
+  12: [],
+  13: [],
+} satisfies Record<CardValue, [number, number, boolean][]>
+
+const rescaleElement = (
+  element: ReactNode,
+  x: number,
+  y: number,
+  width: number,
+  rotate: boolean,
+) => (
+  <g
+    transform={`translate(${x}, ${y}) scale(${width / 100}) ${rotate ? 'rotate(180 50 50)' : ''}`}
+  >
+    {element}
+  </g>
+)
+
+const getCenterElements = (
+  card: Card,
+  mainColor: string,
+  secondaryColor: string,
+) => {
+  if (card.value === 1) {
+    const mainWidth = ICON + ICON_GAP_X + ICON + ICON_GAP_X + ICON
+    return rescaleElement(
+      <>
+        <path
+          fill={mainColor}
+          d="M50 22.5C30 22.5 11.6 32.5.6 49L0 50l.6.9a59.1 59.1 0 0 0 98.8 0l.6-.9-.6-.9A59 59 0 0 0 50 22.5zm0 5A22.5 22.5 0 0 1 72.5 50 22.5 22.5 0 0 1 50 72.5 22.5 22.5 0 0 1 27.5 50 22.5 22.5 0 0 1 50 27.5z"
+        />
+        <circle fill={secondaryColor} cx="50" cy="50" r="15" />
+      </>,
+      MAIN_X,
+      (HEIGHT - mainWidth) / 2,
+      mainWidth,
+      false,
+    )
+  } else if (card.value >= 2 && card.value <= 10) {
+    return (
+      <>
+        {SUIT_ICONS[card.value].map((icon) =>
+          rescaleElement(
+            suitElements[card.suit],
+            icon[0],
+            icon[1],
+            ICON,
+            icon[2],
+          ),
+        )}
+      </>
+    )
+  } else if (card.value >= 11 && card.value <= 13) {
+    const top = HEIGHT / 2 - BIG_ICON - BIG_ICON_GAP
+    const bottom = HEIGHT / 2 + BIG_ICON + BIG_ICON_GAP
+    const left = WIDTH / 2 - BIG_ICON - BIG_ICON_GAP
+    const right = WIDTH / 2 + BIG_ICON + BIG_ICON_GAP
+    return (
+      <>
+        {rescaleElement(
+          characterElements[card.value],
+          left,
+          top,
+          BIG_ICON,
+          false,
+        )}
+        <path
+          style={{
+            stroke: secondaryColor,
+            strokeWidth: BIG_LINE_STROKE,
+            strokeLinecap: 'round',
+          }}
+          d={`M ${right},${top} ${left},${bottom}`}
+        />
+        {rescaleElement(
+          characterElements[card.value],
+          WIDTH / 2 + BIG_ICON_GAP,
+          HEIGHT / 2 + BIG_ICON_GAP,
+          BIG_ICON,
+          true,
+        )}
+      </>
+    )
+  } else {
+    return null
+  }
+}
 
 type CardImageProps = {
   card?: Card
@@ -63,134 +222,51 @@ const CardImage = ({ card }: CardImageProps) => {
   if (!card) {
     return <CardBackSvg />
   }
-  switch (card.face) {
-    case 'club':
-      switch (card.value) {
-        case 1:
-          return <ClubsAceSvg />
-        case 2:
-          return <Clubs2Svg />
-        case 3:
-          return <Clubs3Svg />
-        case 4:
-          return <Clubs4Svg />
-        case 5:
-          return <Clubs5Svg />
-        case 6:
-          return <Clubs6Svg />
-        case 7:
-          return <Clubs7Svg />
-        case 8:
-          return <Clubs8Svg />
-        case 9:
-          return <Clubs9Svg />
-        case 10:
-          return <Clubs10Svg />
-        case 11:
-          return <ClubsJackSvg />
-        case 12:
-          return <ClubsQueenSvg />
-        case 13:
-          return <ClubsKingSvg />
-        default:
-          return null
-      }
-    case 'diamond':
-      switch (card.value) {
-        case 1:
-          return <DiamondsAceSvg />
-        case 2:
-          return <Diamonds2Svg />
-        case 3:
-          return <Diamonds3Svg />
-        case 4:
-          return <Diamonds4Svg />
-        case 5:
-          return <Diamonds5Svg />
-        case 6:
-          return <Diamonds6Svg />
-        case 7:
-          return <Diamonds7Svg />
-        case 8:
-          return <Diamonds8Svg />
-        case 9:
-          return <Diamonds9Svg />
-        case 10:
-          return <Diamonds10Svg />
-        case 11:
-          return <DiamondsJackSvg />
-        case 12:
-          return <DiamondsQueenSvg />
-        case 13:
-          return <DiamondsKingSvg />
-        default:
-          return null
-      }
-    case 'heart':
-      switch (card.value) {
-        case 1:
-          return <HeartsAceSvg />
-        case 2:
-          return <Hearts2Svg />
-        case 3:
-          return <Hearts3Svg />
-        case 4:
-          return <Hearts4Svg />
-        case 5:
-          return <Hearts5Svg />
-        case 6:
-          return <Hearts6Svg />
-        case 7:
-          return <Hearts7Svg />
-        case 8:
-          return <Hearts8Svg />
-        case 9:
-          return <Hearts9Svg />
-        case 10:
-          return <Hearts10Svg />
-        case 11:
-          return <HeartsJackSvg />
-        case 12:
-          return <HeartsQueenSvg />
-        case 13:
-          return <HeartsKingSvg />
-        default:
-          return null
-      }
-    case 'spade':
-      switch (card.value) {
-        case 1:
-          return <SpadesAceSvg />
-        case 2:
-          return <Spades2Svg />
-        case 3:
-          return <Spades3Svg />
-        case 4:
-          return <Spades4Svg />
-        case 5:
-          return <Spades5Svg />
-        case 6:
-          return <Spades6Svg />
-        case 7:
-          return <Spades7Svg />
-        case 8:
-          return <Spades8Svg />
-        case 9:
-          return <Spades9Svg />
-        case 10:
-          return <Spades10Svg />
-        case 11:
-          return <SpadesJackSvg />
-        case 12:
-          return <SpadesQueenSvg />
-        case 13:
-          return <SpadesKingSvg />
-        default:
-          return null
-      }
-    default:
-      return null
-  }
+
+  const mainColor =
+    card.suit === 'heart' || card.suit === 'diamond' ? '#9f3a36' : '#373635'
+  const secondaryColor =
+    card.suit === 'heart' || card.suit === 'diamond' ? '#373635' : '#9f3a36'
+
+  return (
+    <svg
+      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      style={{
+        color: mainColor,
+      }}
+    >
+      <rect x="0" y="0" width="630" height="880" fill="#f3efe0" />
+      {rescaleElement(
+        characterElements[card.value],
+        OUTER_PADDING,
+        OUTER_PADDING,
+        SMALL_ICON,
+        false,
+      )}
+      {rescaleElement(
+        suitElements[card.suit],
+        OUTER_PADDING,
+        OUTER_PADDING + SMALL_ICON_GAP + SMALL_ICON,
+        SMALL_ICON,
+        false,
+      )}
+      {getCenterElements(card, mainColor, secondaryColor)}
+      {rescaleElement(
+        suitElements[card.suit],
+        WIDTH - OUTER_PADDING - SMALL_ICON,
+        HEIGHT - OUTER_PADDING - SMALL_ICON - SMALL_ICON_GAP - SMALL_ICON,
+        SMALL_ICON,
+        true,
+      )}
+      {rescaleElement(
+        characterElements[card.value],
+        WIDTH - OUTER_PADDING - SMALL_ICON,
+        HEIGHT - OUTER_PADDING - SMALL_ICON,
+        SMALL_ICON,
+        true,
+      )}
+    </svg>
+  )
 }
 
 export default CardImage

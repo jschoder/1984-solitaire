@@ -19,7 +19,7 @@ const PlayingCard = ({
     listeners,
     setNodeRef: cardDragRef,
   } = useDraggable({
-    id: card.face + '-' + card.value,
+    id: card.suit + '-' + card.value,
     data: {
       card,
       placement,

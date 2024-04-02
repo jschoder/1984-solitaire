@@ -3,11 +3,11 @@ export const JACK = 11
 export const QUEEN = 12
 export const KING = 13
 
-export type CardFace = 'club' | 'diamond' | 'heart' | 'spade'
+export type CardSuit = 'club' | 'diamond' | 'heart' | 'spade'
 export type CardValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
 
 export type Card = {
-  face: CardFace
+  suit: CardSuit
   value: CardValue
   faceUp: boolean
 }

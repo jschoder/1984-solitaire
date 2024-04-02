@@ -1,5 +1,5 @@
 // import { atom, selector } from 'jotai'
-import type { Card, CardFace, CardValue, CardPlacement } from '../types/card'
+import type { Card, CardSuit, CardValue, CardPlacement } from '../types/card'
 import { ACE, JACK, KING, QUEEN } from '../types/card'
 import { create } from 'zustand'
 import { shuffle } from '../utils/array'
@@ -62,11 +62,11 @@ const useGameStore = create<GameState>((set) => ({
   },
   shufflePile: () => {
     set((state: GameState) => {
-      const faces: CardFace[] = ['diamond', 'heart', 'spade', 'club']
+      const suits: CardSuit[] = ['diamond', 'heart', 'spade', 'club']
       const values: CardValue[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
       const cards: Card[] = shuffle(
-        faces.flatMap((face) =>
-          values.map((value) => ({ face, value, faceUp: false })),
+        suits.flatMap((suit) =>
+          values.map((value) => ({ suit, value, faceUp: false })),
         ),
       )
       const tableau = []
