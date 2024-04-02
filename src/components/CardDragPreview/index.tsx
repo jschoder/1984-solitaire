@@ -20,9 +20,12 @@ const CardDragPreview = ({ card, placement }: CardDragPreviewProps) => {
     <>
       {cards.map((card, index) =>
         index === cards.length - 1 ? (
-          <CardImage card={card} />
+          <CardImage card={card} key='main-card' />
         ) : (
-          <div className="overflow-hidden aspect-[4/1] -mb-2">
+          <div
+            className='overflow-hidden aspect-[4/1] -mb-2'
+            key={`partial-card-${index}`}
+          >
             <CardImage card={card} />
           </div>
         ),

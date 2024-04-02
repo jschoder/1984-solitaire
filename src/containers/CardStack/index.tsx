@@ -6,16 +6,18 @@ import CardImage from '~/components/CardImage'
 
 type CardStackProps = {
   cards: Card[]
-  placement: CardPlacement
+  droppable?: boolean
   flatStack?: boolean
   onClick?: () => void
+  placement: CardPlacement
 }
 
 const CardStack = ({
   cards,
-  placement,
+  droppable = false,
   flatStack = false,
   onClick,
+  placement,
 }: CardStackProps) => {
   const { isOver, setNodeRef: droppableRef } = useDroppable({
     id: placement.stack + ('index' in placement ? '-' + placement.index : ''),
@@ -42,8 +44,8 @@ const CardStack = ({
 
   return (
     <div
-      ref={droppableRef}
-      className={`flex flex-col ${isOver ? 'opacity-70' : ''}`}
+      ref={droppable ? droppableRef : undefined}
+      className={`flex flex-col ${droppable && isOver ? 'opacity-80' : ''}`}
       onClick={onClick}
     >
       {children}

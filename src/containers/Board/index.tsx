@@ -15,11 +15,12 @@ const BoardLayout = () => {
     | undefined
   >()
 
+  const drawState = useStore((state: GameState) => state.draw)
   const foundationState = useStore((state: GameState) => state.foundation)
   const stockState = useStore((state: GameState) => state.stock)
-  const wasteState = useStore((state: GameState) => state.waste)
   const tableauState = useStore((state: GameState) => state.tableau)
 
+  const canDrop = useStore((state: GameState) => state.canDrop)
   const cycleStock = useStore((state: GameState) => state.cycleStock)
   const moveCard = useStore((state: GameState) => state.moveCard)
   const shufflePile = useStore((state: GameState) => state.shufflePile)
@@ -42,42 +43,45 @@ const BoardLayout = () => {
           const { active, over } = event
           setActiveDrag(undefined)
           if (active?.data?.current && over?.data?.current) {
-            moveCard(
-              active.data.current.card,
-              active.data.current.placement,
-              over.data.current.placement,
-            )
+            const card = active.data.current.card
+            const from = active.data.current.placement
+            const to = over.data.current.placement
+            if (canDrop(card, from, to)) {
+              moveCard(card, from, to)
+            }
           }
         }}
       >
-        <div className="max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-4 p-4">
+        <div className='max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-4 p-4'>
           {foundationState.map((foundationStack, index) => (
             <CardStack
-              key={`foundation-${index}`}
               cards={foundationStack}
-              placement={{ stack: 'foundation', index }}
+              droppable
               flatStack
+              key={`foundation-${index}`}
+              placement={{ stack: 'foundation', index }}
             />
           ))}
           <div />
           <CardStack
-            key="waste"
-            cards={wasteState}
-            placement={{ stack: 'waste' }}
-            onClick={wasteState.length === 0 ? cycleStock : undefined}
+            cards={drawState}
             flatStack
+            key='draw'
+            onClick={drawState.length === 0 ? cycleStock : undefined}
+            placement={{ stack: 'draw' }}
           />
           <CardStack
-            key="stock"
             cards={stockState}
-            placement={{ stack: 'stock' }}
-            onClick={cycleStock}
             flatStack
+            key='stock'
+            onClick={cycleStock}
+            placement={{ stack: 'stock' }}
           />
           {tableauState.map((tableauStack, index) => (
             <CardStack
-              key={`tableau-${index}`}
               cards={tableauStack}
+              droppable
+              key={`tableau-${index}`}
               placement={{ stack: 'tableau', index }}
             />
           ))}

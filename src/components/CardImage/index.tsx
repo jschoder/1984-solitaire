@@ -146,8 +146,10 @@ const rescaleElement = (
   y: number,
   width: number,
   rotate: boolean,
+  key?: string,
 ) => (
   <g
+    key={key}
     transform={`translate(${x}, ${y}) scale(${width / 100}) ${rotate ? 'rotate(180 50 50)' : ''}`}
   >
     {element}
@@ -165,9 +167,9 @@ const getCenterElements = (
       <>
         <path
           fill={mainColor}
-          d="M50 22.5C30 22.5 11.6 32.5.6 49L0 50l.6.9a59.1 59.1 0 0 0 98.8 0l.6-.9-.6-.9A59 59 0 0 0 50 22.5zm0 5A22.5 22.5 0 0 1 72.5 50 22.5 22.5 0 0 1 50 72.5 22.5 22.5 0 0 1 27.5 50 22.5 22.5 0 0 1 50 27.5z"
+          d='M50 22.5C30 22.5 11.6 32.5.6 49L0 50l.6.9a59.1 59.1 0 0 0 98.8 0l.6-.9-.6-.9A59 59 0 0 0 50 22.5zm0 5A22.5 22.5 0 0 1 72.5 50 22.5 22.5 0 0 1 50 72.5 22.5 22.5 0 0 1 27.5 50 22.5 22.5 0 0 1 50 27.5z'
         />
-        <circle fill={secondaryColor} cx="50" cy="50" r="15" />
+        <circle fill={secondaryColor} cx='50' cy='50' r='15' />
       </>,
       MAIN_X,
       (HEIGHT - mainWidth) / 2,
@@ -177,13 +179,14 @@ const getCenterElements = (
   } else if (card.value >= 2 && card.value <= 10) {
     return (
       <>
-        {SUIT_ICONS[card.value].map((icon) =>
+        {SUIT_ICONS[card.value].map((icon, index) =>
           rescaleElement(
             suitElements[card.suit],
             icon[0],
             icon[1],
             ICON,
             icon[2],
+            'icon' + index,
           ),
         )}
       </>
@@ -229,7 +232,7 @@ const distressCardElement = (color: string, x: number, y: number) => (
     transform={`translate(${Math.round((DISTRESS_SIZE - WIDTH) * x)}, ${Math.round((DISTRESS_SIZE - HEIGHT) * y)})`}
     style={{ fill: color }}
   >
-    <use xlinkHref="#distressing" />
+    <use xlinkHref='#distressing' />
   </g>
 )
 
@@ -240,7 +243,7 @@ type CardImageProps = {
 const CardImage = ({ card }: CardImageProps) => {
   if (!card) {
     return (
-      <div className="rounded-lg overflow-hidden border border-white">
+      <div className='rounded-lg overflow-hidden border border-white'>
         <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`}></svg>
       </div>
     )
@@ -253,7 +256,7 @@ const CardImage = ({ card }: CardImageProps) => {
       card.suit === 'heart' || card.suit === 'diamond' ? BLACK : RED
 
     return (
-      <div className="rounded-lg overflow-hidden border border-gray-800">
+      <div className='rounded-lg overflow-hidden border border-gray-800'>
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           style={{
@@ -300,7 +303,7 @@ const CardImage = ({ card }: CardImageProps) => {
     )
   } else {
     return (
-      <div className="rounded-lg overflow-hidden border border-gray-800">
+      <div className='rounded-lg overflow-hidden border border-gray-800'>
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           style={{

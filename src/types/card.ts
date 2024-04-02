@@ -23,10 +23,10 @@ export type Card = {
 }
 
 export type CardPlacement =
+  | { stack: 'draw' }
+  | { stack: 'foundation'; index: number }
+  | { stack: 'stock' }
   | {
       stack: 'tableau'
       index: number
     }
-  | { stack: 'foundation'; index: number }
-  | { stack: 'waste' }
-  | { stack: 'stock' }

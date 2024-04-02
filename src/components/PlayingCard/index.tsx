@@ -31,8 +31,8 @@ const PlayingCard = ({
       <div
         ref={card.faceUp ? cardDragRef : undefined}
         className={`${topOnly ? 'overflow-hidden aspect-[4/1] -mb-2' : ''}`}
-        {...listeners}
-        {...attributes}
+        {...(card.faceUp ? listeners : [])}
+        {...(card.faceUp ? attributes : [])}
       >
         {<CardImage card={card} />}
       </div>

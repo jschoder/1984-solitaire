@@ -1,62 +1,136 @@
 // import { atom, selector } from 'jotai'
 import type { Card, CardSuit, CardValue, CardPlacement } from '../types/card'
-import { ACE, JACK, KING, QUEEN } from '../types/card'
+import { ACE } from '../types/card'
 import { create } from 'zustand'
 import { shuffle } from '../utils/array'
-
-type GameType = {
-  tableau: {
-    hidden: Card[]
-    visible: Card[]
-  }[]
-  foundation: Card[][]
-  stock: Card[]
-  waste: Card[]
-}
 
 export type GameState = {
   tableau: Card[][]
   foundation: Card[][]
   stock: Card[]
-  waste: Card[]
+  draw: Card[]
+  canDrop: (card: Card, from: CardPlacement, to: CardPlacement) => boolean
   cycleStock: () => void
-  shufflePile: () => void
   moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => void
-  // moveCard: (source: string, destination: string) => void
+  shufflePile: () => void
 }
 
-const useGameStore = create<GameState>((set) => ({
-  // Tableau piles (7 piles)
+const useGameStore = create<GameState>((set, get) => ({
   tableau: [[], [], [], [], [], [], []],
-  // Foundation piles (4 piles)
   foundation: [[], [], [], []],
-  // Stock pile
   stock: [],
-  // Waste pile
-  waste: [],
+  draw: [],
+  canDrop: (card: Card, from: CardPlacement, to: CardPlacement) => {
+    if (from === to) {
+      return false
+    }
+    const state = get()
+    if (to.stack === 'foundation') {
+      if (state.foundation[to.index].length === 0) {
+        return card.value === ACE
+      } else {
+        const topCard =
+          state.foundation[to.index][state.foundation[to.index].length - 1]
+        return topCard.suit === card.suit && topCard.value + 1 === card.value
+      }
+    } else if (to.stack === 'tableau') {
+      if (card.value === ACE) {
+        return false
+      }
+      if (state.tableau[to.index].length === 0) {
+        return true
+      }
+      const topCard =
+        state.tableau[to.index][state.tableau[to.index].length - 1]
+      if (topCard.value - 1 === card.value) {
+        if (card.suit === 'club' || card.suit === 'spade') {
+          return topCard.suit === 'diamond' || topCard.suit === 'heart'
+        } else if (card.suit === 'diamond' || card.suit === 'heart') {
+          return topCard.suit === 'club' || topCard.suit === 'spade'
+        } else {
+          throw new Error('Unknown card suit: ' + card.suit)
+        }
+      } else {
+        return false
+      }
+    } else {
+      throw new Error('Unexpected stack: ' + to.stack)
+    }
+  },
   cycleStock: () => {
     set((state: GameState) => {
       let stock = state.stock
-      let waste = state.waste
+      let draw = state.draw
       if (stock.length === 0) {
-        const firstCard = waste.shift()
+        const firstCard = draw.shift()
         if (firstCard) {
-          stock = waste.reverse().map((card) => ({ ...card, faceUp: false }))
-          waste = [firstCard]
+          stock = draw.reverse().map((card) => ({ ...card, faceUp: false }))
+          draw = [firstCard]
         }
       } else {
         const nextCard = stock.pop()
         if (nextCard) {
           nextCard.faceUp = true
-          waste.push(nextCard)
+          draw.push(nextCard)
         }
       }
-
-      console.log('C', waste, stock)
-
       return {
         stock: [...stock],
-        waste: [...waste],
+        draw: [...draw],
+      }
+    })
+  },
+  moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => {
+    set((state: GameState) => {
+      const { foundation, draw, stock, tableau } = state
+      let movingCards: Card[] = []
+
+      switch (from.stack) {
+        case 'foundation':
+          const lastFoundationCard = foundation[from.index].pop()
+          if (lastFoundationCard) {
+            movingCards = [lastFoundationCard]
+          } else {
+            throw new Error('Trying to slice of an empty foundation')
+          }
+          break
+        case 'tableau':
+          const cardList = tableau[from.index]
+          const cardIndex = cardList.lastIndexOf(card)
+          if (cardIndex === -1) {
+            throw new Error('Card not found in tableau')
+          }
+          movingCards = cardList.splice(cardIndex)
+          if (cardList.length > 0) {
+            cardList[cardList.length - 1].faceUp = true
+          }
+          break
+        case 'draw':
+          const lastdrawCard = draw.pop()
+          if (lastdrawCard) {
+            movingCards = [lastdrawCard]
+          } else {
+            throw new Error('Trying to slice of an empty draw')
+          }
+          break
+        default:
+          throw new Error('Invalid drag source: ' + to.stack)
+      }
+      switch (to.stack) {
+        case 'foundation':
+          foundation[to.index].push(...movingCards)
+          break
+        case 'tableau':
+          tableau[to.index].push(...movingCards)
+          break
+        default:
+          throw new Error('Invalid drop target: ' + to.stack)
+      }
+      return {
+        foundation: [...foundation],
+        tableau: [...tableau],
+        draw: [...draw],
+        stock: [...stock],
       }
     })
   },
@@ -90,66 +164,12 @@ const useGameStore = create<GameState>((set) => ({
         tableau.push(subarray)
       }
       const firstDrawnCard = cards.pop()
-      const waste = firstDrawnCard ? [{ ...firstDrawnCard, faceUp: true }] : []
+      const draw = firstDrawnCard ? [{ ...firstDrawnCard, faceUp: true }] : []
       const stock = cards
       return {
         tableau,
-        waste,
+        draw,
         stock,
-      }
-    })
-  },
-  moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => {
-    set((state: GameState) => {
-      // TODO fix targets
-      const { foundation, waste, stock, tableau } = state
-      let movingCards: Card[] = []
-
-      switch (from.stack) {
-        case 'foundation':
-          const lastFoundationCard = foundation[from.index].pop()
-          if (lastFoundationCard) {
-            movingCards = [lastFoundationCard]
-          } else {
-            throw new Error('Trying to slice of an empty foundation')
-          }
-          break
-        case 'waste':
-          const lastWasteCard = waste.pop()
-          if (lastWasteCard) {
-            movingCards = [lastWasteCard]
-          } else {
-            throw new Error('Trying to slice of an empty waste')
-          }
-          break
-        case 'tableau':
-          const cardList = tableau[from.index]
-          const cardIndex = cardList.lastIndexOf(card)
-          if (cardIndex === -1) {
-            throw new Error('Card not found in tableau')
-          }
-          movingCards = cardList.splice(cardIndex)
-          if (cardList.length > 0) {
-            cardList[cardList.length - 1].faceUp = true
-          }
-          break
-      }
-      switch (to.stack) {
-        case 'foundation':
-          foundation[to.index].push(...movingCards)
-          break
-        case 'waste':
-          console.log('NOPE')
-          break
-        case 'tableau':
-          tableau[to.index].push(...movingCards)
-          break
-      }
-      return {
-        foundation: [...foundation],
-        tableau: [...tableau],
-        waste: [...waste],
-        stock: [...stock],
       }
     })
   },
