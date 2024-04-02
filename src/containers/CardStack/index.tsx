@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardPlacement } from '../../types/card'
 import { useDroppable } from '@dnd-kit/core'
 
