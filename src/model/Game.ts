@@ -1,4 +1,3 @@
-// import { atom, selector } from 'jotai'
 import type { Card, CardSuit, CardValue, CardPlacement } from '../types/card'
 import { ACE } from '../types/card'
 import { create } from 'zustand'
