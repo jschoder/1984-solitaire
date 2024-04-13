@@ -1,4 +1,5 @@
-import type { Card, CardPlacement } from '~/types/card'
+import type { Card } from '~/types/card'
+import type { CardPlacement } from '~/types/cardPlacement'
 import CardImage from '~/components/CardImage'
 
 import { useDraggable } from '@dnd-kit/core'
