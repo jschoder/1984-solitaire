@@ -1,4 +1,5 @@
-import type { Card, CardSuit, CardValue, CardPlacement } from '../types/card'
+import type { Card, CardSuit, CardValue } from '../types/card'
+import type { CardPlacement } from '../types/cardPlacement'
 import { ACE } from '../types/card'
 import { create } from 'zustand'
 import { shuffle } from '../utils/array'
@@ -42,10 +43,10 @@ const useGameStore = create<GameState>((set, get) => ({
       const topCard =
         state.tableau[to.index][state.tableau[to.index].length - 1]
       if (topCard.value - 1 === card.value) {
-        if (card.suit === 'club' || card.suit === 'spade') {
-          return topCard.suit === 'diamond' || topCard.suit === 'heart'
-        } else if (card.suit === 'diamond' || card.suit === 'heart') {
-          return topCard.suit === 'club' || topCard.suit === 'spade'
+        if (card.suit === 'clubs' || card.suit === 'spade') {
+          return topCard.suit === 'diamonds' || topCard.suit === 'hearts'
+        } else if (card.suit === 'diamonds' || card.suit === 'hearts') {
+          return topCard.suit === 'clubs' || topCard.suit === 'spade'
         } else {
           throw new Error('Unknown card suit: ' + card.suit)
         }
@@ -135,7 +136,7 @@ const useGameStore = create<GameState>((set, get) => ({
   },
   shufflePile: () => {
     set(() => {
-      const suits: CardSuit[] = ['diamond', 'heart', 'spade', 'club']
+      const suits: CardSuit[] = ['diamonds', 'hearts', 'spade', 'clubs']
       const values: CardValue[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
       const cards: Card[] = shuffle(
         suits.flatMap((suit) =>

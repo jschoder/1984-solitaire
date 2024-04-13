@@ -251,9 +251,9 @@ const CardImage = ({ card }: CardImageProps) => {
 
   if (card.faceUp) {
     const mainColor =
-      card.suit === 'heart' || card.suit === 'diamond' ? RED : BLACK
+      card.suit === 'hearts' || card.suit === 'diamonds' ? RED : BLACK
     const secondaryColor =
-      card.suit === 'heart' || card.suit === 'diamond' ? BLACK : RED
+      card.suit === 'hearts' || card.suit === 'diamonds' ? BLACK : RED
 
     return (
       <div className='rounded-lg overflow-hidden border border-gray-800'>

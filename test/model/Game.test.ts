@@ -34,7 +34,7 @@ describe('Game', () => {
     expect(result.current.stock).toHaveLength(22)
     expect(result.current.draw).toHaveLength(2)
     expect(result.current.draw[0]).toEqual({
-      suit: expect.stringMatching(/^(club|diamond|heart|spade)$/),
+      suit: expect.stringMatching(/^(clubs|diamonds|hearts|spade)$/),
       value: expect.any(Number),
       /*
           .toBeInteger()
