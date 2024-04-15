@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import PlayingCard from './index'
-import argTypes from '~/types/card.argTypes'
+import { argTypes } from '~/components/CardImage/CardImage.stories'
 import type { TypeWithDeepControls } from 'storybook-addon-deep-controls'
 import DistressingSvg from '~/assets/distressing.svg?react'
 

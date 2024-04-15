@@ -1,8 +1,30 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import CardImage from './index'
-import argTypes from '~/types/card.argTypes'
 import type { TypeWithDeepControls } from 'storybook-addon-deep-controls'
 import DistressingSvg from '~/assets/distressing.svg?react'
+
+export const argTypes = {
+  'card.distress.front.x': {
+    control: { type: 'range', min: 0, max: 1, step: 0.001 },
+  },
+  'card.distress.front.y': {
+    control: { type: 'range', min: 0, max: 1, step: 0.001 },
+  },
+  'card.distress.back.x': {
+    control: { type: 'range', min: 0, max: 1, step: 0.001 },
+  },
+  'card.distress.back.y': {
+    control: { type: 'range', min: 0, max: 1, step: 0.001 },
+  },
+  'card.faceUp': { control: 'boolean' },
+  'card.suit': {
+    control: 'select',
+    options: ['clubs', 'diamonds', 'hearts', 'spade'],
+  },
+  'card.value': {
+    control: { type: 'range', min: 1, max: 13, step: 1 },
+  },
+} as const
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {

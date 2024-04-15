@@ -1,151 +1,26 @@
 import { ReactNode } from 'react'
-import type { Card, CardValue } from '~/types/card'
-import characterElements from './characters'
-import logoElement from './logo'
-import suitElements from './suits'
+import { ACE, JACK, QUEEN, KING } from '~/types/card'
+import type { Card } from '~/types/card'
+// All used assets have to be based on an svg with a viewBox of `0 0 100 100` using either full width, height or both
+import aceAsset from './assets/ace'
+import characterAssets from './assets/characters'
+import logoAsset from './assets/logo'
+import suitAsset from './assets/suits'
 
-const WHITE = '#f3efe0'
-const RED = '#9f3a36'
-const BLACK = '#373635'
+import layout, { ace, cardBack, cardCorners, court, numbered } from './layout'
 
-// Size of the distress element
-const DISTRESS_SIZE = 20
-
-// Padding between elements
-const OUTER_PADDING = 20
-const MAIN_PADDING_X = 20
-
-// Small icon & character top left and and bottom right
-const SMALL_ICON = 40
-const SMALL_ICON_GAP = 10
-
-// Suit Icons and spacing for 2-10
-const ICON = 90
-const ICON_GAP_X = 5
-const ICON_GAP_Y = 40
-
-// Letters to show for J/Q/K (11/12/13)
-const BIG_ICON = 110
-const BIG_ICON_GAP = 20
-const BIG_LINE_STROKE = 10
-
-// Total width and height of the viewport
-const WIDTH =
-  OUTER_PADDING +
-  SMALL_ICON +
-  MAIN_PADDING_X +
-  (ICON + ICON_GAP_X + ICON + ICON_GAP_X + ICON) +
-  MAIN_PADDING_X +
-  SMALL_ICON +
-  OUTER_PADDING
-const HEIGHT = Math.round(WIDTH * (880 / 630))
-
-// Area to show the main part of the card (excluding the corners)
-const MAIN_X = OUTER_PADDING + SMALL_ICON + MAIN_PADDING_X
-const MAIN_Y = (HEIGHT - 4 * ICON - 3 * ICON_GAP_Y) / 2
-
-// Grid for suit icons 2-10
-const GRID_X_1 = MAIN_X
-const GRID_X_2 = MAIN_X + ICON + ICON_GAP_X
-const GRID_X_3 = MAIN_X + ICON + ICON_GAP_X + ICON + ICON_GAP_X
-
-const GRID_Y_1 = MAIN_Y
-const GRID_Y_2 = GRID_Y_1 + 0.5 * (ICON + ICON_GAP_Y)
-const GRID_Y_2_5 = GRID_Y_1 + 0.67 * (ICON + ICON_GAP_Y)
-const GRID_Y_3 = GRID_Y_1 + ICON + ICON_GAP_Y
-const GRID_Y_4 = GRID_Y_3 + 0.5 * (ICON + ICON_GAP_Y)
-const GRID_Y_5 = GRID_Y_3 + ICON + ICON_GAP_Y
-const GRID_Y_6 = GRID_Y_5 + 0.5 * (ICON + ICON_GAP_Y)
-const GRID_Y_7 = GRID_Y_5 + ICON + ICON_GAP_Y
-
-// Margin for the party logo
-const LOGO_MARGIN = 50
-
-const SUIT_ICONS = {
-  1: [],
-  2: [
-    [GRID_X_2, GRID_Y_2, false],
-    [GRID_X_2, GRID_Y_6, true],
-  ],
-  3: [
-    [GRID_X_2, GRID_Y_1, false],
-    [GRID_X_2, GRID_Y_4, false],
-    [GRID_X_2, GRID_Y_7, true],
-  ],
-  4: [
-    [GRID_X_1, GRID_Y_2, false],
-    [GRID_X_3, GRID_Y_2, false],
-    [GRID_X_1, GRID_Y_6, true],
-    [GRID_X_3, GRID_Y_6, true],
-  ],
-  5: [
-    [GRID_X_1, GRID_Y_1, false],
-    [GRID_X_3, GRID_Y_1, false],
-    [GRID_X_2, GRID_Y_4, false],
-    [GRID_X_1, GRID_Y_7, true],
-    [GRID_X_3, GRID_Y_7, true],
-  ],
-  6: [
-    [GRID_X_1, GRID_Y_1, false],
-    [GRID_X_3, GRID_Y_1, false],
-    [GRID_X_1, GRID_Y_4, false],
-    [GRID_X_3, GRID_Y_4, false],
-    [GRID_X_1, GRID_Y_7, true],
-    [GRID_X_3, GRID_Y_7, true],
-  ],
-  7: [
-    [GRID_X_1, GRID_Y_1, false],
-    [GRID_X_3, GRID_Y_1, false],
-    [GRID_X_2, GRID_Y_2_5, false],
-    [GRID_X_1, GRID_Y_4, false],
-    [GRID_X_3, GRID_Y_4, false],
-    [GRID_X_1, GRID_Y_7, true],
-    [GRID_X_3, GRID_Y_7, true],
-  ],
-  8: [
-    [GRID_X_1, GRID_Y_1, false],
-    [GRID_X_3, GRID_Y_1, false],
-    [GRID_X_1, GRID_Y_3, false],
-    [GRID_X_3, GRID_Y_3, false],
-    [GRID_X_1, GRID_Y_5, true],
-    [GRID_X_3, GRID_Y_5, true],
-    [GRID_X_1, GRID_Y_7, true],
-    [GRID_X_3, GRID_Y_7, true],
-  ],
-  9: [
-    [GRID_X_1, GRID_Y_1, false],
-    [GRID_X_3, GRID_Y_1, false],
-    [GRID_X_1, GRID_Y_3, false],
-    [GRID_X_3, GRID_Y_3, false],
-    [GRID_X_2, GRID_Y_4, false],
-    [GRID_X_1, GRID_Y_5, true],
-    [GRID_X_3, GRID_Y_5, true],
-    [GRID_X_1, GRID_Y_7, true],
-    [GRID_X_3, GRID_Y_7, true],
-  ],
-  10: [
-    [GRID_X_1, GRID_Y_1, false],
-    [GRID_X_3, GRID_Y_1, false],
-    [GRID_X_2, GRID_Y_2, false],
-    [GRID_X_1, GRID_Y_3, false],
-    [GRID_X_3, GRID_Y_3, false],
-    [GRID_X_1, GRID_Y_5, true],
-    [GRID_X_3, GRID_Y_5, true],
-    [GRID_X_2, GRID_Y_6, true],
-    [GRID_X_1, GRID_Y_7, true],
-    [GRID_X_3, GRID_Y_7, true],
-  ],
-  11: [],
-  12: [],
-  13: [],
-} satisfies Record<CardValue, [number, number, boolean][]>
+// Viewbox width and height of ~/assets/distressing.svg
+const DISTRESS_SIZE = {
+  height: 2500,
+  width: 2500,
+} as const
 
 const rescaleElement = (
   element: ReactNode,
   x: number,
   y: number,
   width: number,
-  rotate: boolean,
+  rotate: boolean = false,
   key?: string,
 ) => (
   <g
@@ -156,81 +31,63 @@ const rescaleElement = (
   </g>
 )
 
-const getCenterElements = (
-  card: Card,
-  mainColor: string,
-  secondaryColor: string,
-) => {
-  if (card.value === 1) {
-    const mainWidth = ICON + ICON_GAP_X + ICON + ICON_GAP_X + ICON
-    return rescaleElement(
-      <>
-        <path
-          fill={mainColor}
-          d='M50 22.5C30 22.5 11.6 32.5.6 49L0 50l.6.9a59.1 59.1 0 0 0 98.8 0l.6-.9-.6-.9A59 59 0 0 0 50 22.5zm0 5A22.5 22.5 0 0 1 72.5 50 22.5 22.5 0 0 1 50 72.5 22.5 22.5 0 0 1 27.5 50 22.5 22.5 0 0 1 50 27.5z'
-        />
-        <circle fill={secondaryColor} cx='50' cy='50' r='15' />
-      </>,
-      MAIN_X,
-      (HEIGHT - mainWidth) / 2,
-      mainWidth,
-      false,
-    )
-  } else if (card.value >= 2 && card.value <= 10) {
+const getCenterElements = (card: Card) => {
+  if (card.value === ACE) {
+    return rescaleElement(<>{aceAsset}</>, ace.x, ace.y, ace.size)
+  } else if (
+    card.value === JACK ||
+    card.value === QUEEN ||
+    card.value === KING
+  ) {
+    const { top, bottom, left, right } = court.dimensions
     return (
       <>
-        {SUIT_ICONS[card.value].map((icon, index) =>
+        {rescaleElement(
+          characterAssets[card.value],
+          left,
+          top,
+          court.size,
+          false,
+        )}
+        <path
+          style={{
+            stroke: 'var(--secondary-color)',
+            strokeWidth: court.stroke,
+            strokeLinecap: 'round',
+          }}
+          d={`M ${right},${top} ${left},${bottom}`}
+        />
+        {rescaleElement(
+          characterAssets[card.value],
+          right - court.size,
+          bottom - court.size,
+          court.size,
+          true,
+        )}
+      </>
+    )
+  } else {
+    return (
+      <>
+        {numbered.grid[card.value].map((icon, index) =>
           rescaleElement(
-            suitElements[card.suit],
+            suitAsset[card.suit],
             icon[0],
             icon[1],
-            ICON,
+            numbered.size,
             icon[2],
             'icon' + index,
           ),
         )}
       </>
     )
-  } else if (card.value >= 11 && card.value <= 13) {
-    const top = HEIGHT / 2 - BIG_ICON - BIG_ICON_GAP
-    const bottom = HEIGHT / 2 + BIG_ICON + BIG_ICON_GAP
-    const left = WIDTH / 2 - BIG_ICON - BIG_ICON_GAP
-    const right = WIDTH / 2 + BIG_ICON + BIG_ICON_GAP
-    return (
-      <>
-        {rescaleElement(
-          characterElements[card.value],
-          left,
-          top,
-          BIG_ICON,
-          false,
-        )}
-        <path
-          style={{
-            stroke: secondaryColor,
-            strokeWidth: BIG_LINE_STROKE,
-            strokeLinecap: 'round',
-          }}
-          d={`M ${right},${top} ${left},${bottom}`}
-        />
-        {rescaleElement(
-          characterElements[card.value],
-          WIDTH / 2 + BIG_ICON_GAP,
-          HEIGHT / 2 + BIG_ICON_GAP,
-          BIG_ICON,
-          true,
-        )}
-      </>
-    )
-  } else {
-    return null
   }
 }
 
 const distressCardElement = (color: string, x: number, y: number) => (
   <g
-    transform={`translate(${Math.round((DISTRESS_SIZE - WIDTH) * x)}, ${Math.round((DISTRESS_SIZE - HEIGHT) * y)})`}
     style={{ fill: color }}
+    transform={`translate(${Math.round((DISTRESS_SIZE.width - layout.width) * -x)}, ${Math.round((DISTRESS_SIZE.height - layout.height) * -y)})`}
   >
     <use xlinkHref='#distressing' />
   </g>
@@ -244,57 +101,53 @@ const CardImage = ({ card }: CardImageProps) => {
   if (!card) {
     return (
       <div className='rounded-lg overflow-hidden border border-white'>
-        <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`}></svg>
+        <svg viewBox={`0 0 ${layout.width} ${layout.height}`}></svg>
       </div>
     )
   }
 
   if (card.faceUp) {
-    const mainColor =
-      card.suit === 'hearts' || card.suit === 'diamonds' ? RED : BLACK
-    const secondaryColor =
-      card.suit === 'hearts' || card.suit === 'diamonds' ? BLACK : RED
-
     return (
       <div className='rounded-lg overflow-hidden border border-gray-800'>
         <svg
-          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          style={{
-            color: mainColor,
-            backgroundColor: WHITE,
-          }}
+          viewBox={`0 0 ${layout.width} ${layout.height}`}
+          style={
+            {
+              background: 'var(--cards-front)',
+              '--primary-color':
+                card.suit === 'hearts' || card.suit === 'diamonds'
+                  ? 'var(--cards-red)'
+                  : 'var(--cards-black)',
+              '--secondary-color':
+                card.suit === 'hearts' || card.suit === 'diamonds'
+                  ? 'var(--cards-black)'
+                  : 'var(--cards-red)',
+            } as React.CSSProperties
+          }
         >
-          {rescaleElement(
-            characterElements[card.value],
-            OUTER_PADDING,
-            OUTER_PADDING,
-            SMALL_ICON,
-            false,
+          {cardCorners.characters.map(({ x, y, size, rotate }, index) =>
+            rescaleElement(
+              characterAssets[card.value],
+              x,
+              y,
+              size,
+              rotate,
+              'cornerCharacter' + index,
+            ),
           )}
-          {rescaleElement(
-            suitElements[card.suit],
-            OUTER_PADDING,
-            OUTER_PADDING + SMALL_ICON_GAP + SMALL_ICON,
-            SMALL_ICON,
-            false,
+          {cardCorners.suits.map(({ x, y, size, rotate }, index) =>
+            rescaleElement(
+              suitAsset[card.suit],
+              x,
+              y,
+              size,
+              rotate,
+              'cornerSuit' + index,
+            ),
           )}
-          {getCenterElements(card, mainColor, secondaryColor)}
-          {rescaleElement(
-            suitElements[card.suit],
-            WIDTH - OUTER_PADDING - SMALL_ICON,
-            HEIGHT - OUTER_PADDING - SMALL_ICON - SMALL_ICON_GAP - SMALL_ICON,
-            SMALL_ICON,
-            true,
-          )}
-          {rescaleElement(
-            characterElements[card.value],
-            WIDTH - OUTER_PADDING - SMALL_ICON,
-            HEIGHT - OUTER_PADDING - SMALL_ICON,
-            SMALL_ICON,
-            true,
-          )}
+          {getCenterElements(card)}
           {distressCardElement(
-            WHITE,
+            'var(--cards-front)',
             card.distress.front.x,
             card.distress.front.y,
           )}
@@ -305,20 +158,12 @@ const CardImage = ({ card }: CardImageProps) => {
     return (
       <div className='rounded-lg overflow-hidden border border-gray-800'>
         <svg
-          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          style={{
-            backgroundColor: BLACK,
-          }}
+          style={{ background: 'var(--cards-back)' }}
+          viewBox={`0 0 ${layout.width} ${layout.height}`}
         >
-          {rescaleElement(
-            logoElement,
-            LOGO_MARGIN,
-            HEIGHT / 2 - WIDTH / 2 + LOGO_MARGIN,
-            WIDTH - 2 * LOGO_MARGIN,
-            false,
-          )}
+          {rescaleElement(logoAsset, cardBack.x, cardBack.y, cardBack.size)}
           {distressCardElement(
-            BLACK,
+            'var(--cards-back)',
             card.distress.back.x,
             card.distress.back.y,
           )}
