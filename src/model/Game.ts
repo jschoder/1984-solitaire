@@ -26,6 +26,12 @@ const useGameStore = create<GameState>((set, get) => ({
     }
     const state = get()
     if (to.area === 'foundation') {
+      if (from.area === 'tableau') {
+        const fromList = state.tableau[from.stack]
+        if (fromList.length > 0 && fromList[fromList.length - 1] !== card) {
+          return false
+        }
+      }
       if (state.foundation[to.stack].length === 0) {
         return card.value === ACE
       } else {
@@ -89,9 +95,12 @@ const useGameStore = create<GameState>((set, get) => ({
         case 'foundation':
           const lastFoundationCard = foundation[from.stack].pop()
           if (lastFoundationCard) {
+            if (card !== lastFoundationCard) {
+              throw new Error("The passed card doesn't fit the foundation card")
+            }
             movingCards = [lastFoundationCard]
           } else {
-            throw new Error('Trying to slice of an empty foundation')
+            throw new Error("Trying to slice card that can't be there")
           }
           break
         case 'tableau':
