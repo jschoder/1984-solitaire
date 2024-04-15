@@ -4,11 +4,14 @@ import react from '@vitejs/plugin-react-swc'
 import { defineConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
+import autoprefixer from 'autoprefixer'
+import tailwindcss from 'tailwindcss'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   css: {
     postcss: {
-      plugins: [require('tailwindcss'), require('autoprefixer')],
+      plugins: [tailwindcss, autoprefixer],
     },
   },
   plugins: [

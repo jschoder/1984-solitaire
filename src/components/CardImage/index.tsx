@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { ACE, JACK, QUEEN, KING } from '~/types/card'
 import type { Card } from '~/types/card'
+import { ACE, JACK, KING, QUEEN } from '~/types/card'
 // All used assets have to be based on an svg with a viewBox of `0 0 100 100` using either full width, height or both
 import aceAsset from './assets/ace'
 import characterAssets from './assets/characters'

@@ -1,5 +1,5 @@
 import type { CardValue } from '~/types/card'
-import { ACE, JACK, QUEEN, KING } from '~/types/card'
+import { ACE, JACK, KING, QUEEN } from '~/types/card'
 
 /*
  * This file calculates the layout of the card front and back based on constants defined in this file

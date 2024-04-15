@@ -1,8 +1,15 @@
 export type CardPlacement =
-  | { stack: 'draw' }
-  | { stack: 'foundation'; index: number }
-  | { stack: 'stock' }
   | {
-      stack: 'tableau'
-      index: number
+      area: 'draw'
+    }
+  | {
+      area: 'foundation'
+      stack: number
+    }
+  | {
+      area: 'stock'
+    }
+  | {
+      area: 'tableau'
+      stack: number
     }

@@ -1,6 +1,7 @@
-import type { Card, CardPlacement } from '~/types/card'
 import CardImage from '~/components/CardImage'
-import useStore, { GameState } from '../../model/Game'
+import useStore, { GameState } from '~/model/Game'
+import type { Card } from '~/types/card'
+import type { CardPlacement } from '~/types/cardPlacement'
 
 type CardDragPreviewProps = {
   card: Card
@@ -9,11 +10,11 @@ type CardDragPreviewProps = {
 
 const CardDragPreview = ({ card, placement }: CardDragPreviewProps) => {
   const cards = useStore((state: GameState) => {
-    const cardList =
-      'index' in placement
-        ? state[placement.stack][placement.index]
-        : state[placement.stack]
-    return cardList.slice(cardList.indexOf(card))
+    const stack =
+      'stack' in placement
+        ? state[placement.area][placement.stack]
+        : state[placement.area]
+    return stack.slice(stack.indexOf(card))
   })
 
   return (

@@ -1,7 +1,7 @@
-import type { Card, CardSuit, CardValue } from '../types/card'
-import type { CardPlacement } from '../types/cardPlacement'
-import { ACE } from '../types/card'
 import { create } from 'zustand'
+import type { Card, CardSuit, CardValue } from '../types/card'
+import { ACE } from '../types/card'
+import type { CardPlacement } from '../types/cardPlacement'
 import { shuffle } from '../utils/array'
 
 export type GameState = {
@@ -25,23 +25,23 @@ const useGameStore = create<GameState>((set, get) => ({
       return false
     }
     const state = get()
-    if (to.stack === 'foundation') {
-      if (state.foundation[to.index].length === 0) {
+    if (to.area === 'foundation') {
+      if (state.foundation[to.stack].length === 0) {
         return card.value === ACE
       } else {
         const topCard =
-          state.foundation[to.index][state.foundation[to.index].length - 1]
+          state.foundation[to.stack][state.foundation[to.stack].length - 1]
         return topCard.suit === card.suit && topCard.value + 1 === card.value
       }
-    } else if (to.stack === 'tableau') {
+    } else if (to.area === 'tableau') {
       if (card.value === ACE) {
         return false
       }
-      if (state.tableau[to.index].length === 0) {
+      if (state.tableau[to.stack].length === 0) {
         return true
       }
       const topCard =
-        state.tableau[to.index][state.tableau[to.index].length - 1]
+        state.tableau[to.stack][state.tableau[to.stack].length - 1]
       if (topCard.value - 1 === card.value) {
         if (card.suit === 'clubs' || card.suit === 'spade') {
           return topCard.suit === 'diamonds' || topCard.suit === 'hearts'
@@ -54,7 +54,7 @@ const useGameStore = create<GameState>((set, get) => ({
         return false
       }
     } else {
-      throw new Error('Unexpected stack: ' + to.stack)
+      throw new Error('Unexpected stack: ' + to.area)
     }
   },
   cycleStock: () => {
@@ -85,9 +85,9 @@ const useGameStore = create<GameState>((set, get) => ({
       const { foundation, draw, stock, tableau } = state
       let movingCards: Card[] = []
 
-      switch (from.stack) {
+      switch (from.area) {
         case 'foundation':
-          const lastFoundationCard = foundation[from.index].pop()
+          const lastFoundationCard = foundation[from.stack].pop()
           if (lastFoundationCard) {
             movingCards = [lastFoundationCard]
           } else {
@@ -95,7 +95,7 @@ const useGameStore = create<GameState>((set, get) => ({
           }
           break
         case 'tableau':
-          const cardList = tableau[from.index]
+          const cardList = tableau[from.stack]
           const cardIndex = cardList.lastIndexOf(card)
           if (cardIndex === -1) {
             throw new Error('Card not found in tableau')
@@ -114,17 +114,17 @@ const useGameStore = create<GameState>((set, get) => ({
           }
           break
         default:
-          throw new Error('Invalid drag source: ' + to.stack)
+          throw new Error('Invalid drag source: ' + to.area)
       }
-      switch (to.stack) {
+      switch (to.area) {
         case 'foundation':
-          foundation[to.index].push(...movingCards)
+          foundation[to.stack].push(...movingCards)
           break
         case 'tableau':
-          tableau[to.index].push(...movingCards)
+          tableau[to.stack].push(...movingCards)
           break
         default:
-          throw new Error('Invalid drop target: ' + to.stack)
+          throw new Error('Invalid drop target: ' + to.area)
       }
       return {
         foundation: [...foundation],

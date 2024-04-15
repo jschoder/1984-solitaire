@@ -1,11 +1,11 @@
+import { DndContext, DragOverlay } from '@dnd-kit/core'
 import React from 'react'
-import CardStack from '../CardStack'
+import DistressingSvg from '~/assets/distressing.svg?react'
 import CardDragPreview from '~/components/CardDragPreview'
+import CardStack from '~/containers/CardStack'
+import useStore, { GameState } from '~/model/Game'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
-import useStore, { GameState } from '../../model/Game'
-import { DndContext, DragOverlay } from '@dnd-kit/core'
-import DistressingSvg from '~/assets/distressing.svg?react'
 
 const BoardLayout = () => {
   const [activeDrag, setActiveDrag] = React.useState<
@@ -54,13 +54,13 @@ const BoardLayout = () => {
         }}
       >
         <div className='max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-4 p-4'>
-          {foundationState.map((foundationStack, index) => (
+          {foundationState.map((foundationStack, stack) => (
             <CardStack
               cards={foundationStack}
               droppable
               flatStack
-              key={`foundation-${index}`}
-              placement={{ stack: 'foundation', index }}
+              key={`foundation-${stack}`}
+              placement={{ area: 'foundation', stack }}
             />
           ))}
           <div />
@@ -69,21 +69,21 @@ const BoardLayout = () => {
             flatStack
             key='draw'
             onClick={drawState.length === 0 ? cycleStock : undefined}
-            placement={{ stack: 'draw' }}
+            placement={{ area: 'draw' }}
           />
           <CardStack
             cards={stockState}
             flatStack
             key='stock'
             onClick={cycleStock}
-            placement={{ stack: 'stock' }}
+            placement={{ area: 'stock' }}
           />
-          {tableauState.map((tableauStack, index) => (
+          {tableauState.map((tableauStack, stack) => (
             <CardStack
               cards={tableauStack}
               droppable
-              key={`tableau-${index}`}
-              placement={{ stack: 'tableau', index }}
+              key={`tableau-${stack}`}
+              placement={{ area: 'tableau', stack }}
             />
           ))}
         </div>

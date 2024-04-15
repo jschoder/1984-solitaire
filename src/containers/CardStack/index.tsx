@@ -1,8 +1,8 @@
-import { Card, CardPlacement } from '../../types/card'
 import { useDroppable } from '@dnd-kit/core'
-
-import PlayingCard from '../../components/PlayingCard'
 import CardImage from '~/components/CardImage'
+import PlayingCard from '~/components/PlayingCard'
+import type { Card } from '~/types/card'
+import type { CardPlacement } from '~/types/cardPlacement'
 
 type CardStackProps = {
   cards: Card[]
@@ -20,7 +20,7 @@ const CardStack = ({
   placement,
 }: CardStackProps) => {
   const { isOver, setNodeRef: droppableRef } = useDroppable({
-    id: placement.stack + ('index' in placement ? '-' + placement.index : ''),
+    id: placement.area + ('stack' in placement ? '-' + placement.stack : ''),
     data: {
       placement,
     },

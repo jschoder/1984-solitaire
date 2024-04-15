@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import CardImage from './index'
 import type { TypeWithDeepControls } from 'storybook-addon-deep-controls'
 import DistressingSvg from '~/assets/distressing.svg?react'
+import CardImage from './index'
 
 export const argTypes = {
   'card.distress.front.x': {

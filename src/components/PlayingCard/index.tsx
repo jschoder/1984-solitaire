@@ -1,8 +1,7 @@
+import { useDraggable } from '@dnd-kit/core'
+import CardImage from '~/components/CardImage'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
-import CardImage from '~/components/CardImage'
-
-import { useDraggable } from '@dnd-kit/core'
 
 type PlayingCardProps = {
   card: Card
