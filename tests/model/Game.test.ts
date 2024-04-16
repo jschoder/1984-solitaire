@@ -1,8 +1,15 @@
+import { expect } from '@jest/globals'
 import { act, renderHook } from '@testing-library/react'
-
 import useGameStore from '../../src/model/Game'
+import createMockData from './gameStore.mock'
+import './toBeValidGameData'
 
 describe('Game', () => {
+  it('validate mock data', () => {
+    const mockData = createMockData()
+    expect(mockData).toBeValidGameData()
+  })
+
   it('should create a store', () => {
     const { result } = renderHook(() => useGameStore())
     expect(result.current.tableau).toHaveLength(7)

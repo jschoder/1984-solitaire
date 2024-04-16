@@ -1,14 +1,11 @@
 import { create } from 'zustand'
-import type { Card, CardSuit, CardValue } from '../types/card'
-import { ACE } from '../types/card'
-import type { CardPlacement } from '../types/cardPlacement'
-import { shuffle } from '../utils/array'
+import type { Card, CardSuit, CardValue } from '~/types/card'
+import { ACE } from '~/types/card'
+import type { CardPlacement } from '~/types/cardPlacement'
+import type { Game } from '~/types/game'
+import { shuffle } from '~/utils/array'
 
-export type GameState = {
-  tableau: Card[][]
-  foundation: Card[][]
-  stock: Card[]
-  draw: Card[]
+export type GameState = Game & {
   canDrop: (card: Card, from: CardPlacement, to: CardPlacement) => boolean
   cycleStock: () => void
   moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => void
