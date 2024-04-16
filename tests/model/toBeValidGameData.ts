@@ -24,7 +24,9 @@ const toBeValidGameData: MatcherFunction<[]> = function (actual: unknown) {
 
   const game = actual as Game
 
-  const allCards = Object.values(game).flat().flat()
+  const allCards = [game.tableau, game.foundation, game.stock, game.draw]
+    .flat()
+    .flat()
   const uniqueCards = _.uniqBy(allCards, (card) => `${card.suit}-${card.value}`)
   const suits = ['clubs', 'diamonds', 'hearts', 'spade'] as const
   for (const suit of suits) {

@@ -18,6 +18,7 @@ describe('Game', () => {
 
   it('should create a store', () => {
     const { result } = renderHook(() => useGameStore())
+    expect(typeof result.current.counter).toBe('number')
     expect(result.current.tableau).toHaveLength(7)
     expect(result.current.tableau[0]).toHaveLength(0)
     expect(result.current.tableau[3]).toHaveLength(4)
@@ -37,6 +38,7 @@ describe('Game', () => {
 
     act(() => result.current.shufflePile())
     expect(result.current.stock).not.toEqual(initialGameState.stock)
+    expect(result.current.counter).toBe(0)
     expect(result.current.tableau[0]).toHaveLength(1)
     expect(result.current.tableau[3]).toHaveLength(4)
     expect(result.current.tableau[6]).toHaveLength(7)
@@ -48,14 +50,17 @@ describe('Game', () => {
 
   it('should draw single cards', () => {
     const { result } = renderHook(() => useGameStore())
+    const originalCounter = result.current.counter
     const originalStockSize = result.current.stock.length
     const originalDrawSize = result.current.draw.length
 
     act(() => result.current.drawCard())
+    expect(result.current.counter).toBe(originalCounter + 1)
     expect(result.current.stock).toHaveLength(originalStockSize - 1)
     expect(result.current.draw).toHaveLength(originalDrawSize + 1)
 
     act(() => result.current.drawCard())
+    expect(result.current.counter).toBe(originalCounter + 2)
     expect(result.current.stock).toHaveLength(originalStockSize - 2)
     expect(result.current.draw).toHaveLength(originalDrawSize + 2)
     expect(result.current).toBeValidGameData()

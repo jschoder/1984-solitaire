@@ -26,6 +26,7 @@ const card = (suit: CardSuit, value: CardValue, faceUp = false): Card => ({
 
 export default () =>
   ({
+    counter: 20,
     tableau: [
       [],
       [card('hearts', QUEEN), card('hearts', 1, true)],

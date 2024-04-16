@@ -13,6 +13,7 @@ export type GameState = Game & {
 }
 
 const useGameStore = create<GameState>((set, get) => ({
+  counter: 0,
   tableau: [[], [], [], [], [], [], []],
   foundation: [[], [], [], []],
   stock: [],
@@ -78,6 +79,7 @@ const useGameStore = create<GameState>((set, get) => ({
         }
       }
       return {
+        counter: state.counter + 1,
         stock: [...stock],
         draw: [...draw],
       }
@@ -133,6 +135,7 @@ const useGameStore = create<GameState>((set, get) => ({
           throw new Error('Invalid drop target: ' + to.area)
       }
       return {
+        counter: state.counter + 1,
         foundation: [...foundation],
         tableau: [...tableau],
         draw: [...draw],
@@ -173,6 +176,7 @@ const useGameStore = create<GameState>((set, get) => ({
       const draw = firstDrawnCard ? [{ ...firstDrawnCard, faceUp: true }] : []
       const stock = cards
       return {
+        counter: 0,
         foundation: [[], [], [], []],
         tableau,
         draw,

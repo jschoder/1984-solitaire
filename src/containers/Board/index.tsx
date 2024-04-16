@@ -16,6 +16,7 @@ const BoardLayout = () => {
     | undefined
   >()
 
+  const counterState = useStore((state: GameState) => state.counter)
   const drawState = useStore((state: GameState) => state.draw)
   const foundationState = useStore((state: GameState) => state.foundation)
   const stockState = useStore((state: GameState) => state.stock)
@@ -30,6 +31,7 @@ const BoardLayout = () => {
     shufflePile()
   }, [])
 
+  // TODO design shuffle button + counter
   return (
     <>
       <DndContext
@@ -63,7 +65,15 @@ const BoardLayout = () => {
               placement={{ area: 'foundation', stack }}
             />
           ))}
-          <div />
+          <div className='flex flex-col items-center justify-center gap-2'>
+            <button
+              className='bg-gray-100 border border-gray-700 rounded-md px-3 py-2'
+              onClick={shufflePile}
+            >
+              Shuffle
+            </button>
+            <div className='text-center'>{counterState}</div>
+          </div>
           <CardStack
             cards={drawState}
             flatStack
