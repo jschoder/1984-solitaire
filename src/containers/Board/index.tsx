@@ -22,7 +22,7 @@ const BoardLayout = () => {
   const tableauState = useStore((state: GameState) => state.tableau)
 
   const canDrop = useStore((state: GameState) => state.canDrop)
-  const cycleStock = useStore((state: GameState) => state.cycleStock)
+  const drawCard = useStore((state: GameState) => state.drawCard /*  */)
   const moveCard = useStore((state: GameState) => state.moveCard)
   const shufflePile = useStore((state: GameState) => state.shufflePile)
 
@@ -68,14 +68,14 @@ const BoardLayout = () => {
             cards={drawState}
             flatStack
             key='draw'
-            onClick={drawState.length === 0 ? cycleStock : undefined}
+            onClick={drawState.length === 0 ? drawCard : undefined}
             placement={{ area: 'draw' }}
           />
           <CardStack
             cards={stockState}
             flatStack
             key='stock'
-            onClick={cycleStock}
+            onClick={drawCard}
             placement={{ area: 'stock' }}
           />
           {tableauState.map((tableauStack, stack) => (

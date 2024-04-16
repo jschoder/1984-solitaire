@@ -7,7 +7,7 @@ import { shuffle } from '~/utils/array'
 
 export type GameState = Game & {
   canDrop: (card: Card, from: CardPlacement, to: CardPlacement) => boolean
-  cycleStock: () => void
+  drawCard: () => void
   moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => void
   shufflePile: () => void
 }
@@ -60,7 +60,7 @@ const useGameStore = create<GameState>((set, get) => ({
       throw new Error('Unexpected stack: ' + to.area)
     }
   },
-  cycleStock: () => {
+  drawCard: () => {
     set((state: GameState) => {
       let stock = state.stock
       let draw = state.draw
@@ -173,6 +173,7 @@ const useGameStore = create<GameState>((set, get) => ({
       const draw = firstDrawnCard ? [{ ...firstDrawnCard, faceUp: true }] : []
       const stock = cards
       return {
+        foundation: [[], [], [], []],
         tableau,
         draw,
         stock,
