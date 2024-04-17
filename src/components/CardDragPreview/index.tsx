@@ -1,5 +1,6 @@
 import CardImage from '~/components/CardImage'
 import type { Card } from '~/types/card'
+import { cardTopRadio } from '../PlayingCard'
 
 type CardDragPreviewProps = {
   cards: Card[]
@@ -8,18 +9,21 @@ type CardDragPreviewProps = {
 const CardDragPreview = ({ cards }: CardDragPreviewProps) => {
   return (
     <>
-      {cards.map((card, index) =>
-        index === cards.length - 1 ? (
-          <CardImage card={card} key='main-card' />
-        ) : (
-          <div
-            className='overflow-hidden aspect-[4/1] -mb-2'
-            key={`partial-card-${index}`}
-          >
-            <CardImage card={card} />
-          </div>
-        ),
-      )}
+      {cards.map((card, index) => (
+        <div
+          className={
+            index === cards.length - 1
+              ? undefined
+              : `overflow-hidden aspect-[${cardTopRadio}]`
+          }
+          key={`partial-card-${index}`}
+        >
+          <CardImage
+            card={card}
+            cardBelowFaceUp={index > 0 ? cards[index - 1].faceUp : undefined}
+          />
+        </div>
+      ))}
     </>
   )
 }

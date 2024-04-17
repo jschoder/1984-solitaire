@@ -3,14 +3,18 @@ import CardImage from '~/components/CardImage'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
 
+export const cardTopRadio = '5/1'
+
 type PlayingCardProps = {
   card: Card
+  cardBelow?: Card
   placement?: CardPlacement
   topOnly?: boolean
 }
 
 const PlayingCard = ({
   card,
+  cardBelow,
   placement,
   topOnly = false,
 }: PlayingCardProps) => {
@@ -30,11 +34,11 @@ const PlayingCard = ({
     <>
       <div
         ref={card.faceUp ? cardDragRef : undefined}
-        className={`${topOnly ? 'overflow-hidden aspect-[4/1] -mb-2' : ''}`}
+        className={`${topOnly ? `overflow-hidden aspect-[${cardTopRadio}]` : ''}`}
         {...(card.faceUp ? listeners : [])}
         {...(card.faceUp ? attributes : [])}
       >
-        {<CardImage card={card} />}
+        {<CardImage card={card} cardBelowFaceUp={cardBelow?.faceUp} />}
       </div>
     </>
   )

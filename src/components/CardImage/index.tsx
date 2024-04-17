@@ -95,9 +95,10 @@ const distressCardElement = (color: string, x: number, y: number) => (
 
 type CardImageProps = {
   card?: Card
+  cardBelowFaceUp?: boolean
 }
 
-const CardImage = ({ card }: CardImageProps) => {
+const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
   if (!card) {
     return (
       <div className='rounded-lg overflow-hidden border border-white'>
@@ -106,71 +107,86 @@ const CardImage = ({ card }: CardImageProps) => {
     )
   }
 
-  if (card.faceUp) {
-    return (
-      <div className='rounded-lg overflow-hidden border border-gray-800'>
-        <svg
-          viewBox={`0 0 ${layout.width} ${layout.height}`}
-          style={
-            {
-              background: 'var(--cards-front)',
-              '--primary-color':
-                card.suit === 'hearts' || card.suit === 'diamonds'
-                  ? 'var(--cards-red)'
-                  : 'var(--cards-black)',
-              '--secondary-color':
-                card.suit === 'hearts' || card.suit === 'diamonds'
-                  ? 'var(--cards-black)'
-                  : 'var(--cards-red)',
-            } as React.CSSProperties
-          }
-        >
-          {cardCorners.characters.map(({ x, y, size, rotate }, index) =>
-            rescaleElement(
-              characterAssets[card.value],
-              x,
-              y,
-              size,
-              rotate,
-              'cornerCharacter' + index,
-            ),
-          )}
-          {cardCorners.suits.map(({ x, y, size, rotate }, index) =>
-            rescaleElement(
-              suitAsset[card.suit],
-              x,
-              y,
-              size,
-              rotate,
-              'cornerSuit' + index,
-            ),
-          )}
-          {getCenterElements(card)}
-          {distressCardElement(
-            'var(--cards-front)',
-            card.distress.front.x,
-            card.distress.front.y,
-          )}
-        </svg>
+  // TODO border-gray-800 rounded-lg
+
+  const svg = card.faceUp ? (
+    <svg
+      style={
+        {
+          '--primary-color':
+            card.suit === 'hearts' || card.suit === 'diamonds'
+              ? 'var(--cards-red)'
+              : 'var(--cards-black)',
+          '--secondary-color':
+            card.suit === 'hearts' || card.suit === 'diamonds'
+              ? 'var(--cards-black)'
+              : 'var(--cards-red)',
+        } as React.CSSProperties
+      }
+      viewBox={`0 0 ${layout.width} ${layout.height}`}
+    >
+      {cardCorners.characters.map(({ x, y, size, rotate }, index) =>
+        rescaleElement(
+          characterAssets[card.value],
+          x,
+          y,
+          size,
+          rotate,
+          'cornerCharacter' + index,
+        ),
+      )}
+      {cardCorners.suits.map(({ x, y, size, rotate }, index) =>
+        rescaleElement(
+          suitAsset[card.suit],
+          x,
+          y,
+          size,
+          rotate,
+          'cornerSuit' + index,
+        ),
+      )}
+      {getCenterElements(card)}
+      {distressCardElement(
+        'var(--cards-front)',
+        card.distress.front.x,
+        card.distress.front.y,
+      )}
+    </svg>
+  ) : (
+    <svg viewBox={`0 0 ${layout.width} ${layout.height}`}>
+      {rescaleElement(logoAsset, cardBack.x, cardBack.y, cardBack.size)}
+      {distressCardElement(
+        'var(--cards-back)',
+        card.distress.back.x,
+        card.distress.back.y,
+      )}
+    </svg>
+  )
+
+  return (
+    <div className='relative '>
+      {cardBelowFaceUp !== undefined && (
+        <div
+          className='absolute top-0 left-0 right-0 h-1/2 z-[-1] border-l border-r border-gray-800'
+          style={{
+            background: cardBelowFaceUp
+              ? 'var(--cards-front)'
+              : 'var(--cards-back)',
+          }}
+        />
+      )}
+      <div
+        className='rounded-lg overflow-hidden border border-gray-800'
+        style={{
+          background: card.faceUp ? 'var(--cards-front)' : 'var(--cards-back)',
+        }}
+      >
+        {svg}
       </div>
-    )
-  } else {
-    return (
-      <div className='rounded-lg overflow-hidden border border-gray-800'>
-        <svg
-          style={{ background: 'var(--cards-back)' }}
-          viewBox={`0 0 ${layout.width} ${layout.height}`}
-        >
-          {rescaleElement(logoAsset, cardBack.x, cardBack.y, cardBack.size)}
-          {distressCardElement(
-            'var(--cards-back)',
-            card.distress.back.x,
-            card.distress.back.y,
-          )}
-        </svg>
-      </div>
-    )
-  }
+    </div>
+  )
 }
+
+//  border-l-red-500 border-r-red-500 border-1
 
 export default CardImage
