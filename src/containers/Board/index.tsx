@@ -28,7 +28,8 @@ const BoardLayout = () => {
   const shufflePile = useStore((state: GameState) => state.shufflePile)
 
   React.useEffect(() => {
-    shufflePile()
+    // TODO shuffle only one first load
+    // shufflePile()
   }, [])
 
   // TODO design shuffle button + counter
