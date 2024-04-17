@@ -7,14 +7,14 @@ export const cardTopRadio = '5/1'
 
 type PlayingCardProps = {
   card: Card
-  cardBelow?: Card
+  cardBelowFaceUp?: boolean
   placement?: CardPlacement
   topOnly?: boolean
 }
 
 const PlayingCard = ({
   card,
-  cardBelow,
+  cardBelowFaceUp,
   placement,
   topOnly = false,
 }: PlayingCardProps) => {
@@ -38,7 +38,7 @@ const PlayingCard = ({
         {...(card.faceUp ? listeners : [])}
         {...(card.faceUp ? attributes : [])}
       >
-        {<CardImage card={card} cardBelowFaceUp={cardBelow?.faceUp} />}
+        {<CardImage card={card} cardBelowFaceUp={cardBelowFaceUp} />}
       </div>
     </>
   )

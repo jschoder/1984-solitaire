@@ -36,7 +36,7 @@ const CardStack = ({
         <PlayingCard
           key={`card-${index}`}
           card={card}
-          cardBelow={index === 0 ? undefined : cards[index - 1]}
+          cardBelowFaceUp={index === 0 ? undefined : cards[index - 1].faceUp}
           placement={placement}
           topOnly={index !== cards.length - 1}
         />
