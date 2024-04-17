@@ -1,14 +1,15 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { ACE, type Card, type CardSuit, type CardValue } from '~/types/card'
+import { ACE, CardSuit, CardValue, type Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
 import type { Game } from '~/types/game'
 import { shuffle } from '~/utils/array'
 
 export type GameState = Game & {
-  canDrop: (card: Card, from: CardPlacement, to: CardPlacement) => boolean
+  canDrop: (cards: Card[], from: CardPlacement, to: CardPlacement) => boolean
   drawCard: () => void
-  moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => void
+  getPartialStack: (card: Card, placement: CardPlacement) => Card[]
+  moveCard: (cards: Card[], from: CardPlacement, to: CardPlacement) => void
   shufflePile: () => void
 }
 
@@ -20,29 +21,30 @@ const useGameStore = create<GameState>()(
       foundation: [[], [], [], []],
       stock: [],
       draw: [],
-      canDrop: (card: Card, from: CardPlacement, to: CardPlacement) => {
+      canDrop: (cards: Card[], from: CardPlacement, to: CardPlacement) => {
         if (from === to) {
           return false
         }
+        if (cards.length === 0) {
+          throw new Error("Can't drop nothing")
+        }
         const state = get()
         if (to.area === 'foundation') {
-          if (from.area === 'tableau') {
-            const fromList = state.tableau[from.stack]
-            if (fromList.length > 0 && fromList[fromList.length - 1] !== card) {
-              return false
-            }
+          if (cards.length > 1) {
+            return false
           }
           if (state.foundation[to.stack].length === 0) {
-            return card.value === ACE
+            return cards[0].value === ACE
           } else {
             const topCard =
               state.foundation[to.stack][state.foundation[to.stack].length - 1]
             return (
-              topCard.suit === card.suit && topCard.value + 1 === card.value
+              topCard.suit === cards[0].suit &&
+              topCard.value + 1 === cards[0].value
             )
           }
         } else if (to.area === 'tableau') {
-          if (card.value === ACE) {
+          if (cards[0].value === ACE) {
             return false
           }
           if (state.tableau[to.stack].length === 0) {
@@ -50,13 +52,15 @@ const useGameStore = create<GameState>()(
           }
           const topCard =
             state.tableau[to.stack][state.tableau[to.stack].length - 1]
-          if (topCard.value - 1 === card.value) {
-            if (card.suit === 'clubs' || card.suit === 'spade') {
-              return topCard.suit === 'diamonds' || topCard.suit === 'hearts'
-            } else if (card.suit === 'diamonds' || card.suit === 'hearts') {
-              return topCard.suit === 'clubs' || topCard.suit === 'spade'
+          if (topCard.value - 1 === cards[0].value) {
+            const topCardSuit = topCard.suit
+            const cardsSuit = cards[0].suit
+            if (cardsSuit === 'clubs' || cardsSuit === 'spade') {
+              return topCardSuit === 'diamonds' || topCardSuit === 'hearts'
+            } else if (cardsSuit === 'diamonds' || cardsSuit === 'hearts') {
+              return topCardSuit === 'clubs' || topCardSuit === 'spade'
             } else {
-              throw new Error('Unknown card suit: ' + card.suit)
+              throw new Error('Unknown card suit: ' + cardsSuit)
             }
           } else {
             return false
@@ -64,6 +68,18 @@ const useGameStore = create<GameState>()(
         } else {
           throw new Error('Unexpected stack: ' + to.area)
         }
+      },
+      getPartialStack: (card: Card, placement: CardPlacement) => {
+        const state = get()
+        const cardList: Card[] =
+          'stack' in placement
+            ? state[placement.area][placement.stack]
+            : state[placement.area]
+        const cardIndex = cardList.lastIndexOf(card)
+        if (cardIndex === -1) {
+          throw new Error('Card not found in ' + placement.area)
+        }
+        return cardList.slice(cardIndex)
       },
       drawCard: () => {
         set((state: GameState) => {
@@ -89,63 +105,30 @@ const useGameStore = create<GameState>()(
           }
         })
       },
-      moveCard: (card: Card, from: CardPlacement, to: CardPlacement) => {
+      moveCard: (cards: Card[], from: CardPlacement, to: CardPlacement) => {
         set((state: GameState) => {
-          const { foundation, draw, stock, tableau } = state
-          let movingCards: Card[] = []
-
-          switch (from.area) {
-            case 'foundation':
-              const lastFoundationCard = foundation[from.stack].pop()
-              if (lastFoundationCard) {
-                if (card !== lastFoundationCard) {
-                  throw new Error(
-                    "The passed card doesn't fit the foundation card",
-                  )
-                }
-                movingCards = [lastFoundationCard]
-              } else {
-                throw new Error("Trying to slice card that can't be there")
-              }
-              break
-            case 'tableau':
-              const cardList = tableau[from.stack]
-              const cardIndex = cardList.lastIndexOf(card)
-              if (cardIndex === -1) {
-                throw new Error('Card not found in tableau')
-              }
-              movingCards = cardList.splice(cardIndex)
-              if (cardList.length > 0) {
-                cardList[cardList.length - 1].faceUp = true
-              }
-              break
-            case 'draw':
-              const lastdrawCard = draw.pop()
-              if (lastdrawCard) {
-                movingCards = [lastdrawCard]
-              } else {
-                throw new Error('Trying to slice of an empty draw')
-              }
-              break
-            default:
-              throw new Error('Invalid drag source: ' + to.area)
+          const fromCardList: Card[] =
+            'stack' in from ? state[from.area][from.stack] : state[from.area]
+          fromCardList.splice(fromCardList.length - cards.length)
+          if (fromCardList.length > 0) {
+            fromCardList[fromCardList.length - 1].faceUp = true
           }
           switch (to.area) {
             case 'foundation':
-              foundation[to.stack].push(...movingCards)
+              state.foundation[to.stack].push(...cards)
               break
             case 'tableau':
-              tableau[to.stack].push(...movingCards)
+              state.tableau[to.stack].push(...cards)
               break
             default:
               throw new Error('Invalid drop target: ' + to.area)
           }
           return {
             counter: state.counter + 1,
-            foundation: [...foundation],
-            tableau: [...tableau],
-            draw: [...draw],
-            stock: [...stock],
+            foundation: [...state.foundation],
+            tableau: [...state.tableau],
+            draw: [...state.draw],
+            stock: [...state.stock],
           }
         })
       },

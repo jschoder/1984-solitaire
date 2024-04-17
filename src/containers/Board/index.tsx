@@ -10,7 +10,7 @@ import type { CardPlacement } from '~/types/cardPlacement'
 const BoardLayout = () => {
   const [activeDrag, setActiveDrag] = React.useState<
     | {
-        card: Card
+        cards: Card[]
         placement: CardPlacement
       }
     | undefined
@@ -23,7 +23,8 @@ const BoardLayout = () => {
   const tableauState = useStore((state: GameState) => state.tableau)
 
   const canDrop = useStore((state: GameState) => state.canDrop)
-  const drawCard = useStore((state: GameState) => state.drawCard /*  */)
+  const drawCard = useStore((state: GameState) => state.drawCard)
+  const getPartialStack = useStore((state: GameState) => state.getPartialStack)
   const moveCard = useStore((state: GameState) => state.moveCard)
   const shufflePile = useStore((state: GameState) => state.shufflePile)
 
@@ -38,22 +39,22 @@ const BoardLayout = () => {
       <DndContext
         onDragStart={({ active }) => {
           if (active?.data?.current) {
-            setActiveDrag(
-              active?.data?.current as { card: Card; placement: CardPlacement },
-            )
+            const { card, placement } = active.data.current
+            setActiveDrag({
+              cards: getPartialStack(card, placement),
+              placement,
+            })
           }
         }}
         onDragEnd={(event) => {
           const { active, over } = event
-          setActiveDrag(undefined)
-          if (active?.data?.current && over?.data?.current) {
-            const card = active.data.current.card
-            const from = active.data.current.placement
+          if (activeDrag && over?.data?.current) {
             const to = over.data.current.placement
-            if (canDrop(card, from, to)) {
-              moveCard(card, from, to)
+            if (canDrop(activeDrag.cards, activeDrag.placement, to)) {
+              moveCard(activeDrag.cards, activeDrag.placement, to)
             }
           }
+          setActiveDrag(undefined)
         }}
       >
         <div className='max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-4 p-4'>
@@ -100,12 +101,7 @@ const BoardLayout = () => {
         </div>
         {activeDrag && (
           <DragOverlay>
-            {activeDrag.card && (
-              <CardDragPreview
-                card={activeDrag.card}
-                placement={activeDrag.placement}
-              />
-            )}
+            {activeDrag.cards && <CardDragPreview cards={activeDrag.cards} />}
           </DragOverlay>
         )}
       </DndContext>
