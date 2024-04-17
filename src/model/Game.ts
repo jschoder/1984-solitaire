@@ -22,7 +22,7 @@ const useGameStore = create<GameState>()(
       stock: [],
       draw: [],
       canDrop: (cards: Card[], from: CardPlacement, to: CardPlacement) => {
-        if (from === to) {
+        if (JSON.stringify(from) === JSON.stringify(to)) {
           return false
         }
         if (cards.length === 0) {
@@ -57,10 +57,8 @@ const useGameStore = create<GameState>()(
             const cardsSuit = cards[0].suit
             if (cardsSuit === 'clubs' || cardsSuit === 'spade') {
               return topCardSuit === 'diamonds' || topCardSuit === 'hearts'
-            } else if (cardsSuit === 'diamonds' || cardsSuit === 'hearts') {
-              return topCardSuit === 'clubs' || topCardSuit === 'spade'
             } else {
-              throw new Error('Unknown card suit: ' + cardsSuit)
+              return topCardSuit === 'clubs' || topCardSuit === 'spade'
             }
           } else {
             return false
