@@ -14,7 +14,7 @@ const CardDragPreview = ({ cards }: CardDragPreviewProps) => {
           className={
             index === cards.length - 1
               ? undefined
-              : `overflow-hidden aspect-[${cardTopRadio}]`
+              : 'overflow-hidden ' + cardTopRadio
           }
           key={`partial-card-${index}`}
         >
