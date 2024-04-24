@@ -1,19 +1,29 @@
 import { ReactNode } from 'react'
 import type { Card } from '~/types/card'
 import { ACE, JACK, KING, QUEEN } from '~/types/card'
+import { distressCardElement } from '~/utils/svg'
 // All used assets have to be based on an svg with a viewBox of `0 0 100 100` using either full width, height or both
+import characterAssets from '~/assets/characters'
 import aceAsset from './assets/ace'
-import characterAssets from './assets/characters'
 import logoAsset from './assets/logo'
 import suitAsset from './assets/suits'
-
 import layout, { ace, cardBack, cardCorners, court, numbered } from './layout'
 
-// Viewbox width and height of ~/assets/distressing.svg
-const DISTRESS_SIZE = {
-  height: 2500,
-  width: 2500,
-} as const
+const CHARACTERS = {
+  1: characterAssets['A'],
+  2: characterAssets['2'],
+  3: characterAssets['3'],
+  4: characterAssets['4'],
+  5: characterAssets['5'],
+  6: characterAssets['6'],
+  7: characterAssets['7'],
+  8: characterAssets['8'],
+  9: characterAssets['9'],
+  10: characterAssets['10'],
+  11: characterAssets['J'],
+  12: characterAssets['Q'],
+  13: characterAssets['K'],
+}
 
 const rescaleElement = (
   element: ReactNode,
@@ -42,13 +52,7 @@ const getCenterElements = (card: Card) => {
     const { top, bottom, left, right } = court.dimensions
     return (
       <>
-        {rescaleElement(
-          characterAssets[card.value],
-          left,
-          top,
-          court.size,
-          false,
-        )}
+        {rescaleElement(CHARACTERS[card.value], left, top, court.size, false)}
         <path
           style={{
             stroke: 'var(--secondary-color)',
@@ -58,7 +62,7 @@ const getCenterElements = (card: Card) => {
           d={`M ${right},${top} ${left},${bottom}`}
         />
         {rescaleElement(
-          characterAssets[card.value],
+          CHARACTERS[card.value],
           right - court.size,
           bottom - court.size,
           court.size,
@@ -83,15 +87,6 @@ const getCenterElements = (card: Card) => {
     )
   }
 }
-
-const distressCardElement = (color: string, x: number, y: number) => (
-  <g
-    style={{ fill: color }}
-    transform={`translate(${Math.round((DISTRESS_SIZE.width - layout.width) * -x)}, ${Math.round((DISTRESS_SIZE.height - layout.height) * -y)})`}
-  >
-    <use xlinkHref='#distressing' />
-  </g>
-)
 
 type CardImageProps = {
   card?: Card
@@ -127,7 +122,7 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
     >
       {cardCorners.characters.map(({ x, y, size, rotate }, index) =>
         rescaleElement(
-          characterAssets[card.value],
+          CHARACTERS[card.value],
           x,
           y,
           size,
@@ -150,6 +145,8 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
         'var(--cards-front)',
         card.distress.front.x,
         card.distress.front.y,
+        layout.width,
+        layout.height,
       )}
     </svg>
   ) : (
@@ -159,6 +156,8 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
         'var(--cards-back)',
         card.distress.back.x,
         card.distress.back.y,
+        layout.width,
+        layout.height,
       )}
     </svg>
   )

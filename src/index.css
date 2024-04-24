@@ -7,8 +7,14 @@ body {
 }
 
 :root {
+  --button-bg: theme('colors.button.bg');
+  --button-text: theme('colors.button.text');
+
   --cards-back: theme('colors.cards.back');
   --cards-black: theme('colors.cards.black');
   --cards-front: theme('colors.cards.front');
   --cards-red: theme('colors.cards.red');
+
+  --counter-bg: theme('colors.counter.bg');
+  --counter-text: theme('colors.counter.text');
 }

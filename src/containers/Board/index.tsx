@@ -3,6 +3,7 @@ import React from 'react'
 import DistressingSvg from '~/assets/distressing.svg?react'
 import CardDragPreview from '~/components/CardDragPreview'
 import CardStack from '~/containers/CardStack'
+import Controls from '~/containers/Controls'
 import useStore, { GameState } from '~/model/Game'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
@@ -16,7 +17,6 @@ const BoardLayout = () => {
     | undefined
   >()
 
-  const counterState = useStore((state: GameState) => state.counter)
   const drawState = useStore((state: GameState) => state.draw)
   const foundationState = useStore((state: GameState) => state.foundation)
   const stockState = useStore((state: GameState) => state.stock)
@@ -26,7 +26,6 @@ const BoardLayout = () => {
   const drawCard = useStore((state: GameState) => state.drawCard)
   const getPartialStack = useStore((state: GameState) => state.getPartialStack)
   const moveCard = useStore((state: GameState) => state.moveCard)
-  const shufflePile = useStore((state: GameState) => state.shufflePile)
 
   React.useEffect(() => {
     // TODO shuffle only one first load
@@ -47,7 +46,7 @@ const BoardLayout = () => {
           }
         }}
         onDragEnd={(event) => {
-          const { active, over } = event
+          const { over } = event
           if (activeDrag && over?.data?.current) {
             const to = over.data.current.placement
             if (canDrop(activeDrag.cards, activeDrag.placement, to)) {
@@ -67,15 +66,7 @@ const BoardLayout = () => {
               placement={{ area: 'foundation', stack }}
             />
           ))}
-          <div className='flex flex-col items-center justify-center gap-2'>
-            <button
-              className='bg-gray-100 border border-gray-700 rounded-md px-3 py-2'
-              onClick={shufflePile}
-            >
-              Shuffle
-            </button>
-            <div className='text-center'>{counterState}</div>
-          </div>
+          <Controls />
           <CardStack
             cards={drawState}
             flatStack
