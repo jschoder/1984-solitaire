@@ -21,6 +21,7 @@ const Board = () => {
   const foundationState = useStore((state: GameState) => state.foundation)
   const stockState = useStore((state: GameState) => state.stock)
   const tableauState = useStore((state: GameState) => state.tableau)
+  const won = useStore((state: GameState) => state.isWon())
 
   const canDrop = useStore((state: GameState) => state.canDrop)
   const drawCard = useStore((state: GameState) => state.drawCard)
@@ -31,9 +32,12 @@ const Board = () => {
     <>
       <DndContext
         onDragStart={({ active }) => {
+          if (won) {
+            return
+          }
+
           if (active?.data?.current) {
             const { card, placement } = active.data.current
-            console.log('DRAG START')
             setActiveDrag({
               cards: getPartialStack(card, placement),
               placement,

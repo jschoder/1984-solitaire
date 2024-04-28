@@ -9,6 +9,7 @@ export type GameState = Game & {
   canDrop: (cards: Card[], from: CardPlacement, to: CardPlacement) => boolean
   drawCard: () => void
   getPartialStack: (card: Card, placement: CardPlacement) => Card[]
+  isWon: () => boolean
   moveCard: (cards: Card[], from: CardPlacement, to: CardPlacement) => void
   shufflePile: () => void
 }
@@ -67,18 +68,6 @@ const useGameStore = create<GameState>()(
           throw new Error('Unexpected stack: ' + to.area)
         }
       },
-      getPartialStack: (card: Card, placement: CardPlacement) => {
-        const state = get()
-        const cardList: Card[] =
-          'stack' in placement
-            ? state[placement.area][placement.stack]
-            : state[placement.area]
-        const cardIndex = cardList.lastIndexOf(card)
-        if (cardIndex === -1) {
-          throw new Error('Card not found in ' + placement.area)
-        }
-        return cardList.slice(cardIndex)
-      },
       drawCard: () => {
         set((state: GameState) => {
           let stock = state.stock
@@ -103,6 +92,19 @@ const useGameStore = create<GameState>()(
           }
         })
       },
+      getPartialStack: (card: Card, placement: CardPlacement) => {
+        const state = get()
+        const cardList: Card[] =
+          'stack' in placement
+            ? state[placement.area][placement.stack]
+            : state[placement.area]
+        const cardIndex = cardList.lastIndexOf(card)
+        if (cardIndex === -1) {
+          throw new Error('Card not found in ' + placement.area)
+        }
+        return cardList.slice(cardIndex)
+      },
+      isWon: () => !get().foundation.some((stack) => stack.length < 13),
       moveCard: (cards: Card[], from: CardPlacement, to: CardPlacement) => {
         set((state: GameState) => {
           const fromCardList: Card[] =
