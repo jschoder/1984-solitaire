@@ -8,7 +8,7 @@ import useStore, { GameState } from '~/model/Game'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
 
-const BoardLayout = () => {
+const Board = () => {
   const [activeDrag, setActiveDrag] = React.useState<
     | {
         cards: Card[]
@@ -27,18 +27,13 @@ const BoardLayout = () => {
   const getPartialStack = useStore((state: GameState) => state.getPartialStack)
   const moveCard = useStore((state: GameState) => state.moveCard)
 
-  React.useEffect(() => {
-    // TODO shuffle only one first load
-    // shufflePile()
-  }, [])
-
-  // TODO design shuffle button + counter
   return (
     <>
       <DndContext
         onDragStart={({ active }) => {
           if (active?.data?.current) {
             const { card, placement } = active.data.current
+            console.log('DRAG START')
             setActiveDrag({
               cards: getPartialStack(card, placement),
               placement,
@@ -59,6 +54,7 @@ const BoardLayout = () => {
         <div className='max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-4 p-4'>
           {foundationState.map((foundationStack, stack) => (
             <CardStack
+              activeDrag={activeDrag}
               cards={foundationStack}
               droppable
               flatStack
@@ -68,6 +64,7 @@ const BoardLayout = () => {
           ))}
           <Controls />
           <CardStack
+            activeDrag={activeDrag}
             cards={drawState}
             flatStack
             key='draw'
@@ -75,6 +72,7 @@ const BoardLayout = () => {
             placement={{ area: 'draw' }}
           />
           <CardStack
+            activeDrag={activeDrag}
             cards={stockState}
             flatStack
             key='stock'
@@ -83,6 +81,7 @@ const BoardLayout = () => {
           />
           {tableauState.map((tableauStack, stack) => (
             <CardStack
+              activeDrag={activeDrag}
               cards={tableauStack}
               droppable
               key={`tableau-${stack}`}
@@ -101,4 +100,4 @@ const BoardLayout = () => {
   )
 }
 
-export default BoardLayout
+export default Board

@@ -102,8 +102,6 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
     )
   }
 
-  // TODO border-gray-800 rounded-lg
-
   const svg = card.faceUp ? (
     <svg
       style={

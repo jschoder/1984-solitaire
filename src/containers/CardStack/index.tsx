@@ -1,10 +1,15 @@
 import { useDroppable } from '@dnd-kit/core'
 import CardImage from '~/components/CardImage'
 import PlayingCard from '~/components/PlayingCard'
+import useStore, { GameState } from '~/model/Game'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
 
 type CardStackProps = {
+  activeDrag?: {
+    cards: Card[]
+    placement: CardPlacement
+  }
   cards: Card[]
   droppable?: boolean
   flatStack?: boolean
@@ -13,6 +18,7 @@ type CardStackProps = {
 }
 
 const CardStack = ({
+  activeDrag,
   cards,
   droppable = false,
   flatStack = false,
@@ -25,7 +31,7 @@ const CardStack = ({
       placement,
     },
   })
-
+  const canDrop = useStore((state: GameState) => state.canDrop)
   const children =
     cards.length === 0 ? (
       <CardImage />
@@ -46,7 +52,14 @@ const CardStack = ({
   return (
     <div
       ref={droppable ? droppableRef : undefined}
-      className={`flex flex-col ${droppable && isOver ? 'opacity-80' : ''}`}
+      className={`flex flex-col
+      ${
+        isOver &&
+        activeDrag &&
+        canDrop(activeDrag.cards, activeDrag.placement, placement)
+          ? 'opacity-80'
+          : ''
+      } ${cards.length > 0 ? 'cursor-pointer' : ''}`}
       onClick={onClick}
     >
       {children}
