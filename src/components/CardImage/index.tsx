@@ -120,6 +120,14 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
       }
       viewBox={`0 0 ${layout.width} ${layout.height}`}
     >
+      {getCenterElements(card)}
+      {distressCardElement(
+        'var(--cards-front)',
+        card.distress.front.x,
+        card.distress.front.y,
+        layout.width,
+        layout.height,
+      )}
       {cardCorners.characters.map(({ x, y, size, rotate }, index) =>
         rescaleElement(
           CHARACTERS[card.value],
@@ -139,14 +147,6 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
           rotate,
           'cornerSuit' + index,
         ),
-      )}
-      {getCenterElements(card)}
-      {distressCardElement(
-        'var(--cards-front)',
-        card.distress.front.x,
-        card.distress.front.y,
-        layout.width,
-        layout.height,
       )}
     </svg>
   ) : (

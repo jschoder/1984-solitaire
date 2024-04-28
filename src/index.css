@@ -3,7 +3,8 @@
 @import 'tailwindcss/utilities';
 
 body {
-  background-color: #73706e;
+  background-image: url('./concrete.svg');
+  background-size: cover;
 }
 
 :root {

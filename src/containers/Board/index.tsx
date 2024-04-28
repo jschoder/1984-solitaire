@@ -96,7 +96,7 @@ const BoardLayout = () => {
           </DragOverlay>
         )}
       </DndContext>
-      <DistressingSvg />
+      <DistressingSvg style={{ display: 'none' }} />
     </>
   )
 }
