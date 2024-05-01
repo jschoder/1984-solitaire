@@ -16,12 +16,13 @@ I have been asked to forward this message:
 
 ## Resources used
 
-The images used in this project have been sourced from the internet, and efforts have been made to ensure that they are used in compliance with copyright laws and regulations. If you believe that any image used in this project infringes upon your copyright, please contact me to address the issue promptly.
+The images and fonts used in this project have been sourced from the internet, and efforts have been made to ensure that they are used in compliance with copyright laws and regulations. If you believe that any image used in this project infringes upon your copyright, please contact me to address the issue promptly.
 
 - Ingsoc Logo https://archive.org/details/900pxIngsocLogoFrom1984.svg
 - Card Grunge Effect https://publicdomainvectors.org/en/free-clipart/Grunge-vector-set/6223.html
 - Concrete https://publicdomainvectors.org/en/free-clipart/Floor-texture/43615.html
-- Font "1942 Report" https://www.fontsquirrel.com/fonts/1942-report
+- Minipax (Font for characters on cards) https://www.fontsquirrel.com/fonts/minipax
+- 1942 Report (Font for successs screen) https://www.fontsquirrel.com/fonts/1942-report
 - Footer Icons https://icons.getbootstrap.com
 
 ## Disclaimer

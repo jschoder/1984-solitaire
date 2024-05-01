@@ -10,6 +10,7 @@
 }
 
 body {
+  background-color: #6e6b69;
   background-image: url('./concrete.svg');
   background-size: cover;
 }

@@ -3,7 +3,7 @@
     "github": "GitHub",
     "highscore": "Highscore"
   },
-  "Highscore": {
+  "Highscores": {
     "columns": {
       "rank": "#",
       "date": "Date",
