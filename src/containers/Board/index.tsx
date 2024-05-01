@@ -68,10 +68,6 @@ const Board = () => {
                 setHighscoreExists(true)
                 setHighscoreOpen(true)
               }
-
-              addHighscore(Math.ceil(counter / 2))
-              setHighscoreExists(true)
-              //setHighscoreOpen(true)
             }
           }
           setActiveDrag(undefined)
