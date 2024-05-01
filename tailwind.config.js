@@ -24,6 +24,11 @@ export default {
           bg: '#373635',
           text: '#fff',
         },
+        successScreen: {
+          bg: '#F2F2D5',
+          greenLine: '#c6d2a2',
+          redLine: '#A8675E',
+        },
       },
       transitionTimingFunction: {
         'mech-in-out': 'cubic-bezier(0.4, 0.0, 0.2, 1)',

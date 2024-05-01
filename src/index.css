@@ -2,12 +2,21 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@font-face {
+  font-family: '1942';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/fonts/1942.woff2) format('woff2');
+}
+
 body {
   background-image: url('./concrete.svg');
   background-size: cover;
 }
 
 :root {
+  font-family: '1942';
+
   --button-bg: theme('colors.button.bg');
   --button-text: theme('colors.button.text');
 
@@ -18,4 +27,45 @@ body {
 
   --counter-bg: theme('colors.counter.bg');
   --counter-text: theme('colors.counter.text');
+}
+
+.highscore-table {
+  @apply text-center;
+  border-spacing: 0;
+  border-left: 5px double theme('colors.successScreen.redLine');
+
+  th div {
+    @apply bg-successScreen-bg;
+  }
+
+  td {
+    border-top: 1px solid theme('colors.successScreen.greenLine');
+  }
+
+  th,
+  td {
+    border-right: 5px double theme('colors.successScreen.redLine');
+
+    div {
+      @apply px-2 py-1 whitespace-nowrap;
+    }
+
+    &:nth-child(2) {
+      border-right: 1px solid theme('colors.successScreen.redLine');
+    }
+  }
+}
+
+.bottom-gradient {
+  height: 0;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(150, 150, 150, 0.3)
+  );
+  transition: height 100ms linear;
+
+  &.active {
+    height: 6rem;
+  }
 }

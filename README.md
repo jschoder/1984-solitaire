@@ -1,8 +1,8 @@
 # Solitaire Ingsoc Edition
 
-**The basic game is working, but there is no success screen yet**
+![Screenshot of the game](./docs/img/screenshot.webp 'Thanks to Miniplenty for providing this barely used set of cards.')
 
-![Screenshot of the game](./docs/img/screenshot.png 'Thanks to Miniplenty for providing this barely used set of cards.')
+![Screenshot of the highscore screen](./docs/img/highscore.webp 'I hope every last one of us will reach 101.')
 
 ## Dedication
 

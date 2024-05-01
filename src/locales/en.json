@@ -1,0 +1,22 @@
+{
+  "Footer": {
+    "github": "GitHub",
+    "highscore": "Highscore"
+  },
+  "Highscore": {
+    "columns": {
+      "rank": "#",
+      "date": "Date",
+      "time": "Time",
+      "turns": "Turns"
+    },
+    "format": {
+      "date": "yy/MM/dd",
+      "time": "HH:mm"
+    },
+    "overlay": {
+      "close": "Close",
+      "title": "Highscore"
+    }
+  }
+}

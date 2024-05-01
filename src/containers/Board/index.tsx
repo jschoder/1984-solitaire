@@ -1,10 +1,15 @@
 import { DndContext, DragOverlay } from '@dnd-kit/core'
 import React from 'react'
 import DistressingSvg from '~/assets/distressing.svg?react'
+import GitHubSvg from '~/assets/github.svg?react'
+import HighscoreSvg from '~/assets/highscore.svg?react'
 import CardDragPreview from '~/components/CardDragPreview'
 import CardStack from '~/containers/CardStack'
 import Controls from '~/containers/Controls'
+import HighscoreOverlay from '~/containers/HighscoreOverlay'
+import i18n from '~/i18n'
 import useStore, { GameState } from '~/model/Game'
+import { addHighscore, hasHighscore } from '~/model/Highscore'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
 
@@ -16,7 +21,10 @@ const Board = () => {
       }
     | undefined
   >()
+  const [highscoreOpen, setHighscoreOpen] = React.useState(false)
+  const [highscoreExists, setHighscoreExists] = React.useState(false)
 
+  const counter = useStore((state: GameState) => state.counter)
   const drawState = useStore((state: GameState) => state.draw)
   const foundationState = useStore((state: GameState) => state.foundation)
   const stockState = useStore((state: GameState) => state.stock)
@@ -28,8 +36,12 @@ const Board = () => {
   const getPartialStack = useStore((state: GameState) => state.getPartialStack)
   const moveCard = useStore((state: GameState) => state.moveCard)
 
+  React.useEffect(() => {
+    hasHighscore().then(setHighscoreExists)
+  }, [])
+
   return (
-    <>
+    <div className='relative'>
       <DndContext
         onDragStart={({ active }) => {
           if (won) {
@@ -50,6 +62,15 @@ const Board = () => {
             const to = over.data.current.placement
             if (canDrop(activeDrag.cards, activeDrag.placement, to)) {
               moveCard(activeDrag.cards, activeDrag.placement, to)
+              if (won) {
+                addHighscore(counter)
+                setHighscoreExists(true)
+                setHighscoreOpen(true)
+              }
+
+              addHighscore(Math.ceil(counter / 2))
+              setHighscoreExists(true)
+              //setHighscoreOpen(true)
             }
           }
           setActiveDrag(undefined)
@@ -100,7 +121,27 @@ const Board = () => {
         )}
       </DndContext>
       <DistressingSvg style={{ display: 'none' }} />
-    </>
+      {highscoreOpen && (
+        <HighscoreOverlay onClose={() => setHighscoreOpen(false)} />
+      )}
+      <div className='fixed bottom-0 left-0 flex gap-4 bg-gray-900/[.6] text-white py-2 px-4 rounded-tr-xl'>
+        <a
+          href='https://github.com/jschoder/Solitaire-Ingsoc'
+          target='_blank'
+          title={i18n.t('Footer.github')}
+        >
+          <GitHubSvg className='w-6 h-6 fill-white' />
+        </a>
+        {highscoreExists && (
+          <a
+            onClick={() => setHighscoreOpen(true)}
+            title={i18n.t('Footer.highscore')}
+          >
+            <HighscoreSvg className='w-6 h-6 fill-white cursor-pointer' />
+          </a>
+        )}
+      </div>
+    </div>
   )
 }
 
