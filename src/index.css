@@ -11,8 +11,12 @@
 
 body {
   background-color: #6e6b69;
-  background-image: url('./concrete.svg');
-  background-size: cover;
+  background-image: url('./concrete.jpg');
+  background-position: top center;
+
+  @media (min-width: 3000px) {
+    background-size: 100vw;
+  }
 }
 
 :root {

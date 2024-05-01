@@ -1,6 +1,5 @@
 import { DndContext, DragOverlay } from '@dnd-kit/core'
-import React from 'react'
-import DistressingSvg from '~/assets/distressing.svg?react'
+import React, { lazy } from 'react'
 import GitHubSvg from '~/assets/github.svg?react'
 import HighscoreSvg from '~/assets/highscore.svg?react'
 import CardDragPreview from '~/components/CardDragPreview'
@@ -12,6 +11,8 @@ import useStore, { GameState } from '~/model/Game'
 import { addHighscore, hasHighscore } from '~/model/Highscore'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
+
+const DistressingSvg = lazy(() => import('~/assets/distressing.svg?react'))
 
 const Board = () => {
   const [activeDrag, setActiveDrag] = React.useState<
