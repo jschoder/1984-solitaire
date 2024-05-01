@@ -21,6 +21,8 @@ The images used in this project have been sourced from the internet, and efforts
 - Ingsoc Logo https://archive.org/details/900pxIngsocLogoFrom1984.svg
 - Card Grunge Effect https://publicdomainvectors.org/en/free-clipart/Grunge-vector-set/6223.html
 - Concrete https://publicdomainvectors.org/en/free-clipart/Floor-texture/43615.html
+- Font "1942 Report" https://www.fontsquirrel.com/fonts/1942-report
+- Footer Icons https://icons.getbootstrap.com
 
 ## Disclaimer
 

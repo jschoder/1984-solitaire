@@ -130,14 +130,14 @@ const Board = () => {
           target='_blank'
           title={i18n.t('Footer.github')}
         >
-          <GitHubSvg className='w-6 h-6 fill-white' />
+          <GitHubSvg className='w-6 h-6' />
         </a>
         {highscoreExists && (
           <a
             onClick={() => setHighscoreOpen(true)}
             title={i18n.t('Footer.highscore')}
           >
-            <HighscoreSvg className='w-6 h-6 fill-white cursor-pointer' />
+            <HighscoreSvg className='w-6 h-6 cursor-pointer' />
           </a>
         )}
       </div>

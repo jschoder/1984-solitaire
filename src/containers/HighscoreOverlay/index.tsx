@@ -77,13 +77,13 @@ const HighscoreOverlay = ({ onClose }: HighscoreOverlayProps) => {
       <div className='z-[99] min-w-[60%] max-w[600px] max-h-[90vh] flex overflow-x-auto p-3 md:p-5 bg-successScreen-bg rounded-md cursor-auto'>
         <div className='flex flex-col flex-grow relative'>
           <div className='flex justify-between mb-3 lg:mb-5 font-extrabold'>
-            <div>{i18n.t('Highscore.overlay.title')}</div>
+            <div>{i18n.t('Highscores.overlay.title')}</div>
             <div>
               <a
                 className='cursor-pointer underline hover:no-underline'
                 onClick={onClose}
               >
-                {i18n.t('Highscore.overlay.close')}
+                {i18n.t('Highscores.overlay.close')}
               </a>
             </div>
           </div>
@@ -96,16 +96,16 @@ const HighscoreOverlay = ({ onClose }: HighscoreOverlayProps) => {
               <thead className='sticky top-0'>
                 <tr>
                   <th>
-                    <div>{i18n.t('Highscore.columns.rank')}</div>
+                    <div>{i18n.t('Highscores.columns.rank')}</div>
                   </th>
                   <th>
-                    <div>{i18n.t('Highscore.columns.date')}</div>
+                    <div>{i18n.t('Highscores.columns.date')}</div>
                   </th>
                   <th>
-                    <div>{i18n.t('Highscore.columns.time')}</div>
+                    <div>{i18n.t('Highscores.columns.time')}</div>
                   </th>
                   <th>
-                    <div>{i18n.t('Highscore.columns.turns')}</div>
+                    <div>{i18n.t('Highscores.columns.turns')}</div>
                   </th>
                 </tr>
               </thead>
@@ -126,14 +126,14 @@ const HighscoreOverlay = ({ onClose }: HighscoreOverlayProps) => {
                     <td>
                       <div>
                         {DateTime.fromMillis(highscore.timestamp).toFormat(
-                          i18n.t('Highscore.format.date'),
+                          i18n.t('Highscores.format.date'),
                         )}
                       </div>
                     </td>
                     <td>
                       <div>
                         {DateTime.fromMillis(highscore.timestamp).toFormat(
-                          i18n.t('Highscore.format.time'),
+                          i18n.t('Highscores.format.time'),
                         )}
                       </div>
                     </td>
