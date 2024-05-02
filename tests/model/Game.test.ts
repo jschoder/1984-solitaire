@@ -168,15 +168,22 @@ describe('Game', () => {
     // To empty tableau
     expect(
       result.current.canDrop(
-        [mockCard('hearts', 2)],
+        [mockCard('hearts', 12)],
         { area: 'draw' },
         { area: 'tableau', stack: 2 },
       ),
-    ).toBe(true)
+    ).toBe(false)
     expect(
       result.current.canDrop(
         [mockCard('spade', 3), mockCard('hearts', 2)],
         { area: 'tableau', stack: 6 },
+        { area: 'tableau', stack: 2 },
+      ),
+    ).toBe(false)
+    expect(
+      result.current.canDrop(
+        [mockCard('hearts', 13)],
+        { area: 'draw' },
         { area: 'tableau', stack: 2 },
       ),
     ).toBe(true)

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { ACE, CardSuit, CardValue, type Card } from '~/types/card'
+import { ACE, CardSuit, CardValue, KING, type Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
 import type { Game } from '~/types/game'
 import { shuffle } from '~/utils/array'
@@ -49,7 +49,7 @@ const useGameStore = create<GameState>()(
             return false
           }
           if (state.tableau[to.stack].length === 0) {
-            return true
+            return cards[0].value === KING
           }
           const topCard =
             state.tableau[to.stack][state.tableau[to.stack].length - 1]
