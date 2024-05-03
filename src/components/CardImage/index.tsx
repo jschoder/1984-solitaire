@@ -1,4 +1,6 @@
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
+import { useMediaQuery } from 'react-responsive'
+import tailwindConfig from '~/../tailwind.config.ts'
 import type { Card } from '~/types/card'
 import { ACE, JACK, KING, QUEEN } from '~/types/card'
 import { distressCardElement } from '~/utils/svg'
@@ -7,7 +9,7 @@ import characterAssets from '~/assets/characters'
 import aceAsset from './assets/ace'
 import logoAsset from './assets/logo'
 import suitAsset from './assets/suits'
-import layout, { ace, cardBack, cardCorners, court, numbered } from './layout'
+import calculateLayout from './layout'
 
 const CHARACTERS = {
   1: characterAssets['A'],
@@ -29,64 +31,17 @@ const rescaleElement = (
   element: ReactNode,
   x: number,
   y: number,
-  width: number,
+  size: number,
   rotate: boolean = false,
   key?: string,
 ) => (
   <g
     key={key}
-    transform={`translate(${x}, ${y}) scale(${width / 100}) ${rotate ? 'rotate(180 50 50)' : ''}`}
+    transform={`translate(${x}, ${y}) scale(${size / 100}) ${rotate ? 'rotate(180 50 50)' : ''}`}
   >
     {element}
   </g>
 )
-
-const getCenterElements = (card: Card) => {
-  if (card.value === ACE) {
-    return rescaleElement(<>{aceAsset}</>, ace.x, ace.y, ace.size)
-  } else if (
-    card.value === JACK ||
-    card.value === QUEEN ||
-    card.value === KING
-  ) {
-    const { top, bottom, left, right } = court.dimensions
-    return (
-      <>
-        {rescaleElement(CHARACTERS[card.value], left, top, court.size, false)}
-        <path
-          style={{
-            stroke: 'var(--secondary-color)',
-            strokeWidth: court.stroke,
-            strokeLinecap: 'round',
-          }}
-          d={`M ${right},${top} ${left},${bottom}`}
-        />
-        {rescaleElement(
-          CHARACTERS[card.value],
-          right - court.size,
-          bottom - court.size,
-          court.size,
-          true,
-        )}
-      </>
-    )
-  } else {
-    return (
-      <>
-        {numbered.grid[card.value].map((icon, index) =>
-          rescaleElement(
-            suitAsset[card.suit],
-            icon[0],
-            icon[1],
-            numbered.size,
-            icon[2],
-            'icon' + index,
-          ),
-        )}
-      </>
-    )
-  }
-}
 
 type CardImageProps = {
   card?: Card
@@ -94,10 +49,92 @@ type CardImageProps = {
 }
 
 const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
+  const isTablet = useMediaQuery({
+    query: `(min-width: ${tailwindConfig.theme.extend.screens.md})`,
+  })
+  const isDesktop = useMediaQuery({
+    query: `(min-width: ${tailwindConfig.theme.extend.screens.lg})`,
+  })
+  const cardLayout = React.useMemo(
+    () =>
+      calculateLayout(isDesktop ? 'desktop' : isTablet ? 'tablet' : 'mobile'),
+    [isDesktop, isTablet],
+  )
+  const getCenterElements = React.useCallback(() => {
+    if (!card) {
+      return undefined
+    } else if (card.value === ACE) {
+      if (!cardLayout.ace) {
+        return undefined
+      }
+      return rescaleElement(
+        <>{aceAsset}</>,
+        cardLayout.ace.x,
+        cardLayout.ace.y,
+        cardLayout.ace.size,
+      )
+    } else if (
+      card.value === JACK ||
+      card.value === QUEEN ||
+      card.value === KING
+    ) {
+      if (!cardLayout.court) {
+        return undefined
+      }
+      const { top, bottom, left, right } = cardLayout.court.dimensions
+      return (
+        <>
+          {rescaleElement(
+            CHARACTERS[card.value],
+            left,
+            top,
+            cardLayout.court.size,
+            false,
+          )}
+          <path
+            style={{
+              stroke: 'var(--secondary-color)',
+              strokeWidth: cardLayout.court.stroke,
+              strokeLinecap: 'round',
+            }}
+            d={`M ${right},${top} ${left},${bottom}`}
+          />
+          {rescaleElement(
+            CHARACTERS[card.value],
+            right - cardLayout.court.size,
+            bottom - cardLayout.court.size,
+            cardLayout.court.size,
+            true,
+          )}
+        </>
+      )
+    } else {
+      if (!cardLayout.numbered) {
+        return undefined
+      }
+      return (
+        <>
+          {cardLayout.numbered.grid[card.value].map((icon, index) =>
+            rescaleElement(
+              suitAsset[card.suit],
+              icon[0],
+              icon[1],
+              cardLayout.numbered!.size,
+              icon[2],
+              'icon' + index,
+            ),
+          )}
+        </>
+      )
+    }
+  }, [card, cardLayout])
+
   if (!card) {
     return (
       <div className='rounded-lg overflow-hidden border border-white'>
-        <svg viewBox={`0 0 ${layout.width} ${layout.height}`}></svg>
+        <svg
+          viewBox={`0 0 ${cardLayout.viewBox.width} ${cardLayout.viewBox.height}`}
+        ></svg>
       </div>
     )
   }
@@ -116,17 +153,17 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
               : 'var(--cards-red)',
         } as React.CSSProperties
       }
-      viewBox={`0 0 ${layout.width} ${layout.height}`}
+      viewBox={`0 0 ${cardLayout.viewBox.width} ${cardLayout.viewBox.height}`}
     >
-      {getCenterElements(card)}
+      {getCenterElements()}
       {distressCardElement(
         'var(--cards-front)',
         card.distress.front.x,
         card.distress.front.y,
-        layout.width,
-        layout.height,
+        cardLayout.viewBox.width,
+        cardLayout.viewBox.height,
       )}
-      {cardCorners.characters.map(({ x, y, size, rotate }, index) =>
+      {cardLayout.cardCorners.characters.map(({ x, y, size, rotate }, index) =>
         rescaleElement(
           CHARACTERS[card.value],
           x,
@@ -136,7 +173,7 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
           'cornerCharacter' + index,
         ),
       )}
-      {cardCorners.suits.map(({ x, y, size, rotate }, index) =>
+      {cardLayout.cardCorners.suits.map(({ x, y, size, rotate }, index) =>
         rescaleElement(
           suitAsset[card.suit],
           x,
@@ -148,14 +185,22 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
       )}
     </svg>
   ) : (
-    <svg viewBox={`0 0 ${layout.width} ${layout.height}`}>
-      {rescaleElement(logoAsset, cardBack.x, cardBack.y, cardBack.size)}
+    <svg
+      className='cardImageSvg'
+      viewBox={`0 0 ${cardLayout.viewBox.width} ${cardLayout.viewBox.height}`}
+    >
+      {rescaleElement(
+        logoAsset,
+        cardLayout.cardBack.x,
+        cardLayout.cardBack.y,
+        cardLayout.cardBack.size,
+      )}
       {distressCardElement(
         'var(--cards-back)',
         card.distress.back.x,
         card.distress.back.y,
-        layout.width,
-        layout.height,
+        cardLayout.viewBox.width,
+        cardLayout.viewBox.height,
       )}
     </svg>
   )
@@ -183,7 +228,5 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
     </div>
   )
 }
-
-//  border-l-red-500 border-r-red-500 border-1
 
 export default CardImage

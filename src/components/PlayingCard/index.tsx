@@ -1,9 +1,12 @@
 import { useDraggable } from '@dnd-kit/core'
+import { useMediaQuery } from 'react-responsive'
+import tailwindConfig from '~/../tailwind.config.ts'
 import CardImage from '~/components/CardImage'
 import type { Card } from '~/types/card'
 import type { CardPlacement } from '~/types/cardPlacement'
 
 export const cardTopRadio = 'aspect-[5/1]'
+export const mobileCardTopRadio = 'aspect-[7/2]'
 
 type PlayingCardProps = {
   card: Card
@@ -18,6 +21,9 @@ const PlayingCard = ({
   placement,
   topOnly = false,
 }: PlayingCardProps) => {
+  const isTablet = useMediaQuery({
+    query: `(min-width: ${tailwindConfig.theme.extend.screens.md})`,
+  })
   const {
     attributes,
     listeners,
@@ -34,7 +40,7 @@ const PlayingCard = ({
     <>
       <div
         ref={card.faceUp ? cardDragRef : undefined}
-        className={`${topOnly ? 'overflow-hidden ' + cardTopRadio : ''}`}
+        className={`${topOnly ? 'overflow-hidden ' + (isTablet ? cardTopRadio : mobileCardTopRadio) : ''}`}
         {...(card.faceUp ? listeners : [])}
         {...(card.faceUp ? attributes : [])}
       >

@@ -1,12 +1,17 @@
+import { useMediaQuery } from 'react-responsive'
+import tailwindConfig from '~/../tailwind.config.ts'
 import CardImage from '~/components/CardImage'
 import type { Card } from '~/types/card'
-import { cardTopRadio } from '../PlayingCard'
+import { cardTopRadio, mobileCardTopRadio } from '../PlayingCard'
 
 type CardDragPreviewProps = {
   cards: Card[]
 }
 
 const CardDragPreview = ({ cards }: CardDragPreviewProps) => {
+  const isTablet = useMediaQuery({
+    query: `(min-width: ${tailwindConfig.theme.extend.screens.md})`,
+  })
   return (
     <>
       {cards.map((card, index) => (
@@ -14,7 +19,8 @@ const CardDragPreview = ({ cards }: CardDragPreviewProps) => {
           className={
             index === cards.length - 1
               ? undefined
-              : 'overflow-hidden ' + cardTopRadio
+              : 'overflow-hidden ' +
+                (isTablet ? cardTopRadio : mobileCardTopRadio)
           }
           key={`partial-card-${index}`}
         >

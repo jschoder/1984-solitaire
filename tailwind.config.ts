@@ -30,6 +30,14 @@ export default {
           redLine: '#A8675E',
         },
       },
+      // Using the standard values from https://tailwindcss.com/docs/breakpoints for documentation
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+      },
       transitionTimingFunction: {
         'mech-in-out': 'cubic-bezier(0.4, 0.0, 0.2, 1)',
       },

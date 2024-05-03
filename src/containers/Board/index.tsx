@@ -73,7 +73,7 @@ const Board = () => {
           setActiveDrag(undefined)
         }}
       >
-        <div className='max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-4 p-4'>
+        <div className='max-w-6xl mx-auto grid grid-cols-7 grid-rows-auto gap-2 md:gap-4 p-2 md:p-4'>
           {foundationState.map((foundationStack, stack) => (
             <CardStack
               activeDrag={activeDrag}

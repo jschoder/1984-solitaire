@@ -8,7 +8,7 @@ const Counter = ({ count }: CounterProps) => {
   const displayedValue = Math.min(count, 999)
   return (
     <div
-      className='flex justify-between w-full items-center gap-2'
+      className='flex justify-between w-full items-center gap-0 md:gap-2'
       style={
         {
           '--primary-color': 'var(--counter-text)',

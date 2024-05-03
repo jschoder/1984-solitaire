@@ -54,7 +54,7 @@ const Digit = ({ value, col }: DigitProps) => {
   return (
     <div
       ref={ref}
-      className={'overflow-hidden relative flex-grow rounded-md ' + ratio}
+      className={'overflow-hidden relative flex-grow md:rounded-md ' + ratio}
     >
       {height && (
         <div
@@ -69,7 +69,7 @@ const Digit = ({ value, col }: DigitProps) => {
           </div>
         </div>
       )}
-      <div className='absolute top-0 right-0 bottom-0 left-0 shadow-inset'></div>
+      <div className='absolute top-0 right-0 bottom-0 left-0 md:shadow-inset'></div>
     </div>
   )
 }
