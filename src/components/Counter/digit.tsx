@@ -1,4 +1,6 @@
 import React from 'react'
+import { useMediaQuery } from 'react-responsive'
+import tailwindConfig from '~/../tailwind.config.ts'
 import characterAssets from '~/assets/characters'
 import { distressCardElement } from '~/utils/svg'
 
@@ -14,6 +16,9 @@ const bufferAfter = 5
 const Digit = ({ value, col }: DigitProps) => {
   const [height, setHeight] = React.useState<number>(0)
   const ref = React.useRef<HTMLDivElement>(null)
+  const isTableOrAbove = useMediaQuery({
+    query: `(min-width: ${tailwindConfig.theme.extend.screens.md})`,
+  })
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -39,13 +44,14 @@ const Digit = ({ value, col }: DigitProps) => {
       >
         <svg viewBox={`0 0 100 100`}>
           {characterAssets[i % 10] || <></>}
-          {distressCardElement(
-            'var(--counter-bg)',
-            (i % 10) / 10,
-            col / 4,
-            100,
-            100,
-          )}
+          {isTableOrAbove &&
+            distressCardElement(
+              'var(--counter-bg)',
+              (i % 10) / 10,
+              col / 4,
+              100,
+              100,
+            )}
         </svg>
       </div>,
     )
@@ -69,7 +75,9 @@ const Digit = ({ value, col }: DigitProps) => {
           </div>
         </div>
       )}
-      <div className='absolute top-0 right-0 bottom-0 left-0 md:shadow-inset'></div>
+      {isTableOrAbove && (
+        <div className='absolute top-0 right-0 bottom-0 left-0 md:shadow-inset'></div>
+      )}
     </div>
   )
 }

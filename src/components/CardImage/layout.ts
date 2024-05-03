@@ -52,7 +52,11 @@ const getCardCorners = (
         y:
           screenSize === 'mobile'
             ? viewBoxHeight - outerPadding - cornerIcon
-            : viewBoxHeight - cornerIcon - cornerIconGap - cornerIcon,
+            : viewBoxHeight -
+              outerPadding -
+              cornerIcon -
+              cornerIconGap -
+              cornerIcon,
         size: cornerIcon,
         rotate: true,
       },
@@ -184,11 +188,18 @@ const getCourt = (viewBoxWidth: number, viewBoxHeight: number) => {
 
 // Padding beween the corner of the card and the party logo
 const LOGO_PADDING = 50
-const getCardBack = (viewBoxWidth: number, viewBoxHeight: number) => {
+const MOBILE_LOGO_PADDING = 30
+const getCardBack = (
+  screenSize: SCREEN_SIZE,
+  viewBoxWidth: number,
+  viewBoxHeight: number,
+) => {
+  const logoPadding =
+    screenSize === 'mobile' ? MOBILE_LOGO_PADDING : LOGO_PADDING
   return {
-    x: LOGO_PADDING,
-    y: viewBoxHeight / 2 - viewBoxWidth / 2 + LOGO_PADDING,
-    size: viewBoxWidth - 2 * LOGO_PADDING,
+    x: logoPadding,
+    y: viewBoxHeight / 2 - viewBoxWidth / 2 + logoPadding,
+    size: viewBoxWidth - 2 * logoPadding,
   } as const
 }
 
@@ -251,7 +262,7 @@ export default (screenSize: SCREEN_SIZE) => {
       screenSize === 'mobile'
         ? undefined
         : getCourt(viewBoxWidth, viewBoxHeight),
-    cardBack: getCardBack(viewBoxWidth, viewBoxHeight),
+    cardBack: getCardBack(screenSize, viewBoxWidth, viewBoxHeight),
     viewBox: {
       width: viewBoxWidth,
       height: viewBoxHeight,

@@ -49,7 +49,7 @@ type CardImageProps = {
 }
 
 const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
-  const isTablet = useMediaQuery({
+  const isTableOrAbove = useMediaQuery({
     query: `(min-width: ${tailwindConfig.theme.extend.screens.md})`,
   })
   const isDesktop = useMediaQuery({
@@ -57,8 +57,10 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
   })
   const cardLayout = React.useMemo(
     () =>
-      calculateLayout(isDesktop ? 'desktop' : isTablet ? 'tablet' : 'mobile'),
-    [isDesktop, isTablet],
+      calculateLayout(
+        isDesktop ? 'desktop' : isTableOrAbove ? 'tablet' : 'mobile',
+      ),
+    [isDesktop, isTableOrAbove],
   )
   const getCenterElements = React.useCallback(() => {
     if (!card) {
@@ -195,13 +197,14 @@ const CardImage = ({ card, cardBelowFaceUp }: CardImageProps) => {
         cardLayout.cardBack.y,
         cardLayout.cardBack.size,
       )}
-      {distressCardElement(
-        'var(--cards-back)',
-        card.distress.back.x,
-        card.distress.back.y,
-        cardLayout.viewBox.width,
-        cardLayout.viewBox.height,
-      )}
+      {isTableOrAbove &&
+        distressCardElement(
+          'var(--cards-back)',
+          card.distress.back.x,
+          card.distress.back.y,
+          cardLayout.viewBox.width,
+          cardLayout.viewBox.height,
+        )}
     </svg>
   )
 

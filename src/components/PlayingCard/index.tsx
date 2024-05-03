@@ -21,7 +21,7 @@ const PlayingCard = ({
   placement,
   topOnly = false,
 }: PlayingCardProps) => {
-  const isTablet = useMediaQuery({
+  const isTableOrAbove = useMediaQuery({
     query: `(min-width: ${tailwindConfig.theme.extend.screens.md})`,
   })
   const {
@@ -40,7 +40,7 @@ const PlayingCard = ({
     <>
       <div
         ref={card.faceUp ? cardDragRef : undefined}
-        className={`${topOnly ? 'overflow-hidden ' + (isTablet ? cardTopRadio : mobileCardTopRadio) : ''}`}
+        className={`${topOnly ? 'overflow-hidden ' + (isTableOrAbove ? cardTopRadio : mobileCardTopRadio) : ''}`}
         {...(card.faceUp ? listeners : [])}
         {...(card.faceUp ? attributes : [])}
       >

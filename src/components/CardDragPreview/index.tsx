@@ -9,7 +9,7 @@ type CardDragPreviewProps = {
 }
 
 const CardDragPreview = ({ cards }: CardDragPreviewProps) => {
-  const isTablet = useMediaQuery({
+  const isTableOrAbove = useMediaQuery({
     query: `(min-width: ${tailwindConfig.theme.extend.screens.md})`,
   })
   return (
@@ -20,7 +20,7 @@ const CardDragPreview = ({ cards }: CardDragPreviewProps) => {
             index === cards.length - 1
               ? undefined
               : 'overflow-hidden ' +
-                (isTablet ? cardTopRadio : mobileCardTopRadio)
+                (isTableOrAbove ? cardTopRadio : mobileCardTopRadio)
           }
           key={`partial-card-${index}`}
         >
